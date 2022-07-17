@@ -3,7 +3,7 @@
     [Serializable]
     public class NPC
     {
-        public long ID { get; }
+        public long ID { get; set; }
         public string? Name { get; set; }
         public int? Age { get; set; }
         public string? Virtue { get; set; }
@@ -71,5 +71,6 @@
             Conditions = "";
             Aspirations = ""; 
         }
+    
     }
 }

@@ -1,4 +1,5 @@
-using System.Text.Json;
+using System.IO.Compression;
+using System.Xml.Serialization;
 
 namespace CofD_NPC
 {
@@ -72,24 +73,31 @@ namespace CofD_NPC
             DirectoryInfo di = new(path);
             foreach (var file in di.GetFiles("*.npc"))
             {
+                
                 try
                 {
-                    NPC n = new();
-                    using (StreamReader sr = File.OpenText(file.FullName))
-                    {
-                        n = JsonSerializer.Deserialize<NPC>(sr.ReadLine());
-                        sr.Close();
-                    }
+                    NPC n = DecompressFile(file);
                     NPCs.Add(n);
                     cfDataGrid.Rows.Add(n.Name, n.Description, n.ID);
                     cfDataGrid.Refresh();
-
                 } catch
                 {
-                    string m = "File " + file.Name + "was corrupted and could not be loaded.";
+                    string m = "File " + file.Name + " was corrupted and could not be loaded.";
                     MessageBox.Show(m, "Corrupt file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private NPC DecompressFile(FileInfo file)
+        {
+            using FileStream fs = new(file.FullName, FileMode.Open, FileAccess.Read);
+            using MemoryStream ums = new();
+            using (DeflateStream ds = new(fs, CompressionMode.Decompress)) { ds.CopyTo(ums); }
+            using FileStream printlog = File.Create(Application.StartupPath + "/log.xml");
+            ums.WriteTo(printlog);
+            XmlSerializer xs = new(typeof(NPC));
+            var n = xs.Deserialize(ums);
+            return (NPC)n;
         }
 
         private void DataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

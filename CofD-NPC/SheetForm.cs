@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.IO.Compression;
+using System.Xml.Serialization;
 
 namespace CofD_NPC
 {
@@ -246,13 +247,7 @@ namespace CofD_NPC
                 SaveValues();
                 SaveDots();
                 SaveHealthStates();
-                string path = Application.StartupPath + "/NPC/" + SFNPC.ID.ToString() + ".npc";
-                using (StreamWriter file = File.CreateText(path))
-                {
-                    string cereal = JsonSerializer.Serialize(SFNPC);
-                    file.Write(cereal);
-                    file.Close();
-                }
+                CompressFile();
                 sfSaveLabel.Text = "Save. . . OK";
                 unsaved = false;
             } catch (Exception ex)
@@ -264,6 +259,20 @@ namespace CofD_NPC
                 sfSaveLabel.Text = "Save failed";
             }
             
+        }
+
+        private void CompressFile()
+        {
+            string path = Application.StartupPath + "/NPC/" + SFNPC.ID.ToString() + ".npc";
+            using MemoryStream ms = new();
+            XmlSerializer xs = new(typeof(NPC));
+            xs.Serialize(ms, SFNPC);
+            ms.Position = 0;
+            using MemoryStream cms = new();
+            using (DeflateStream ds = new(cms, CompressionMode.Compress, true)) { ms.CopyTo(ds); }
+            FileStream fs = File.Create(path);
+            cms.WriteTo(fs);
+            fs.Close();
         }
 
         private void SaveValues()
