@@ -100,6 +100,7 @@
             this.cfDataGrid.Name = "cfDataGrid";
             this.cfDataGrid.ReadOnly = true;
             this.cfDataGrid.RowHeadersVisible = false;
+            this.cfDataGrid.RowHeadersWidth = 51;
             this.cfDataGrid.RowTemplate.Height = 25;
             this.cfDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.cfDataGrid.Size = new System.Drawing.Size(224, 344);
@@ -110,6 +111,7 @@
             // 
             this.cfNPCNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.cfNPCNameColumn.HeaderText = "Name";
+            this.cfNPCNameColumn.MinimumWidth = 6;
             this.cfNPCNameColumn.Name = "cfNPCNameColumn";
             this.cfNPCNameColumn.ReadOnly = true;
             this.cfNPCNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -118,17 +120,20 @@
             // 
             this.cfNPCDescriptionColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.cfNPCDescriptionColumn.HeaderText = "Description";
+            this.cfNPCDescriptionColumn.MinimumWidth = 6;
             this.cfNPCDescriptionColumn.Name = "cfNPCDescriptionColumn";
             this.cfNPCDescriptionColumn.ReadOnly = true;
             this.cfNPCDescriptionColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.cfNPCDescriptionColumn.Width = 92;
+            this.cfNPCDescriptionColumn.Width = 114;
             // 
             // cfNPCIDColumn
             // 
             this.cfNPCIDColumn.HeaderText = "ID";
+            this.cfNPCIDColumn.MinimumWidth = 6;
             this.cfNPCIDColumn.Name = "cfNPCIDColumn";
             this.cfNPCIDColumn.ReadOnly = true;
             this.cfNPCIDColumn.Visible = false;
+            this.cfNPCIDColumn.Width = 125;
             // 
             // cfNewNPCButton
             // 
@@ -155,9 +160,9 @@
             // 
             this.cfRadio8Again.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cfRadio8Again.AutoSize = true;
-            this.cfRadio8Again.Location = new System.Drawing.Point(118, 448);
+            this.cfRadio8Again.Location = new System.Drawing.Point(118, 446);
             this.cfRadio8Again.Name = "cfRadio8Again";
-            this.cfRadio8Again.Size = new System.Drawing.Size(65, 19);
+            this.cfRadio8Again.Size = new System.Drawing.Size(81, 23);
             this.cfRadio8Again.TabIndex = 3;
             this.cfRadio8Again.TabStop = true;
             this.cfRadio8Again.Text = "8 Again";
@@ -167,9 +172,9 @@
             // 
             this.cfRadio9Again.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cfRadio9Again.AutoSize = true;
-            this.cfRadio9Again.Location = new System.Drawing.Point(118, 419);
+            this.cfRadio9Again.Location = new System.Drawing.Point(118, 417);
             this.cfRadio9Again.Name = "cfRadio9Again";
-            this.cfRadio9Again.Size = new System.Drawing.Size(65, 19);
+            this.cfRadio9Again.Size = new System.Drawing.Size(81, 23);
             this.cfRadio9Again.TabIndex = 2;
             this.cfRadio9Again.TabStop = true;
             this.cfRadio9Again.Text = "9 Again";
@@ -179,9 +184,9 @@
             // 
             this.cfRoteCheck.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.cfRoteCheck.AutoSize = true;
-            this.cfRoteCheck.Location = new System.Drawing.Point(62, 419);
+            this.cfRoteCheck.Location = new System.Drawing.Point(50, 417);
             this.cfRoteCheck.Name = "cfRoteCheck";
-            this.cfRoteCheck.Size = new System.Drawing.Size(50, 19);
+            this.cfRoteCheck.Size = new System.Drawing.Size(62, 23);
             this.cfRoteCheck.TabIndex = 6;
             this.cfRoteCheck.Text = "Rote";
             this.cfRoteCheck.UseVisualStyleBackColor = true;
@@ -192,16 +197,16 @@
             this.cfDiceNumUpDown.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cfDiceNumUpDown.Location = new System.Drawing.Point(42, 388);
             this.cfDiceNumUpDown.Name = "cfDiceNumUpDown";
-            this.cfDiceNumUpDown.Size = new System.Drawing.Size(70, 23);
+            this.cfDiceNumUpDown.Size = new System.Drawing.Size(70, 27);
             this.cfDiceNumUpDown.TabIndex = 4;
             // 
             // cfRadio10Again
             // 
             this.cfRadio10Again.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.cfRadio10Again.AutoSize = true;
-            this.cfRadio10Again.Location = new System.Drawing.Point(118, 390);
+            this.cfRadio10Again.Location = new System.Drawing.Point(118, 388);
             this.cfRadio10Again.Name = "cfRadio10Again";
-            this.cfRadio10Again.Size = new System.Drawing.Size(71, 19);
+            this.cfRadio10Again.Size = new System.Drawing.Size(89, 23);
             this.cfRadio10Again.TabIndex = 1;
             this.cfRadio10Again.TabStop = true;
             this.cfRadio10Again.Text = "10 Again";
@@ -209,8 +214,7 @@
             // 
             // CoreForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(235, 478);
             this.Controls.Add(this.cfTableLayout);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

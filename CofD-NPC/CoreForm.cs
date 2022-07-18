@@ -8,12 +8,12 @@ namespace CofD_NPC
         private readonly List<NPC> NPCs = new();
         public CoreForm()
         {
+            Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             InitializeComponent();
             if (CheckForResources())
             {
                 cfRadio10Again.Checked = true;
-                string path = Application.StartupPath + "/Resource/cofd.ico";
-                this.Icon = Icon.ExtractAssociatedIcon(path);
+                this.Icon = Properties.Resources.cofd;
                 LoadNPCs();
             }
         }
@@ -38,7 +38,7 @@ namespace CofD_NPC
         }
 
         private bool CheckForResources()
-        {
+        {/*
             string[] paths = {
                 Application.StartupPath + "/Resource/healthy.png",
                 Application.StartupPath + "/Resource/bashing.png",
@@ -57,7 +57,8 @@ namespace CofD_NPC
                 MessageBox.Show(message, "Missing Files", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Close();
                 return false;
-            } else { return true; }
+            } else { return true; } */
+            return true;
         }
 
         private void LoadNPCs()
@@ -114,12 +115,20 @@ namespace CofD_NPC
 
         private void DeleteNPCButton_Click(object sender, EventArgs e)
         {
-            try {
-                string path = Application.StartupPath + "/NPC/" + cfDataGrid.SelectedCells[2].Value + ".npc";
-                File.Delete(path);
-                NPCs.RemoveAll(p => p.ID == (long)cfDataGrid.SelectedCells[2].Value);
-                cfDataGrid.Rows.RemoveAt(cfDataGrid.CurrentCell.RowIndex);
-            } catch { }
+            string m = "Are you sure you want to delete ";
+            m += cfDataGrid.SelectedCells[0].Value + "?";
+            var result = MessageBox.Show(m, "Delete?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    string path = Application.StartupPath + "/NPC/" + cfDataGrid.SelectedCells[2].Value + ".npc";
+                    File.Delete(path);
+                    NPCs.RemoveAll(p => p.ID == (long)cfDataGrid.SelectedCells[2].Value);
+                    cfDataGrid.Rows.RemoveAt(cfDataGrid.CurrentCell.RowIndex);
+                }
+                catch { }
+            }
         }
 
         private void NewFormClosed(object sender, EventArgs e)

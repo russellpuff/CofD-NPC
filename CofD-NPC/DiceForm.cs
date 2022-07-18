@@ -20,10 +20,10 @@ namespace CofD_NPC
         public DiceForm(string[] snames, int[] svalues, string[] mnames, int[] mvalues, int health, int wp, int integr,
             int inte, int wits, int res, int str, int dex, int stam, int pres, int man, int comp)
         {
+            Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             InitializeComponent();
             dfRadio10Again.Checked = true;
-            string path = Application.StartupPath + "/Resource/cofd.ico";
-            this.Icon = Icon.ExtractAssociatedIcon(path);
+            this.Icon = Properties.Resources.cofd;
 
             // Add zero at the top if the user selects none.
             skillvals.Add(0);

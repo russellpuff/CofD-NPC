@@ -128,6 +128,7 @@
             // dfRollButton
             // 
             this.dfRollButton.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.dfRollButton.Font = new System.Drawing.Font("Elephant", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.dfRollButton.Location = new System.Drawing.Point(328, 107);
             this.dfRollButton.Name = "dfRollButton";
             this.dfRollButton.Size = new System.Drawing.Size(121, 44);
@@ -188,8 +189,7 @@
             // 
             // DiceForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(462, 159);
             this.Controls.Add(this.dfModifierNumUpDown);
             this.Controls.Add(this.dfRadio8Again);

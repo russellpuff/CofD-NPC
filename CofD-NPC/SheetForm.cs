@@ -7,11 +7,27 @@ namespace CofD_NPC
     {
         private Image? healthy, bashing, lethal, aggriv, dotch, dotunch;
         private bool unsaved;
+        private readonly List<PictureBox> health_dots = new();
+        private readonly List<PictureBox> willpower_dots = new();
+        private readonly List<PictureBox> integrity_dots = new();
+        private readonly List<PictureBox> intelligence_dots = new();
+        private readonly List<PictureBox> wits_dots = new();
+        private readonly List<PictureBox> resolve_dots = new();
+        private readonly List<PictureBox> strength_dots = new();
+        private readonly List<PictureBox> dexterity_dots = new();
+        private readonly List<PictureBox> stamina_dots = new();
+        private readonly List<PictureBox> presence_dots = new();
+        private readonly List<PictureBox> manipulation_dots = new();
+        private readonly List<PictureBox> composure_dots = new();
+        private readonly List<List<PictureBox>> skill_dots = new();
+        private readonly List<List<PictureBox>> merit_dots = new();
         public NPC SFNPC { get; }
 
         public SheetForm(NPC? n = null)
         {
+            Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             InitializeComponent();
+            InitializeLists();
             InitializeImages();
             InitializeImageControls();
             if (n != null) {
@@ -22,34 +38,67 @@ namespace CofD_NPC
             string title = (sfNameTextBox.Text == String.Empty) ? "Unnamed NPC" : sfNameTextBox.Text;
             this.Text = title;
             unsaved = false;
+
+            string path = Application.StartupPath + "/defuck.txt";
+            using StreamReader sr = new(path);
+            if (sr.ReadLine() == "enable") { UnfuckText(true); }
+        }
+
+        private void InitializeLists()
+        {
+            int point = 1;
+            for (int i = 1; i <= 12; ++i)
+            {
+                if (i <= 10)
+                { // Core dots
+                    if (i <= 5)
+                    { // Attribute dots
+                        intelligence_dots.Add((PictureBox)this.Controls[$"sfIntDot{i}"]);
+                        wits_dots.Add((PictureBox)this.Controls[$"sfWitsDot{i}"]);
+                        resolve_dots.Add((PictureBox)this.Controls[$"sfResDot{i}"]);
+                        strength_dots.Add((PictureBox)this.Controls[$"sfStrDot{i}"]);
+                        dexterity_dots.Add((PictureBox)this.Controls[$"sfDexDot{i}"]);
+                        stamina_dots.Add((PictureBox)this.Controls[$"sfStamDot{i}"]);
+                        presence_dots.Add((PictureBox)this.Controls[$"sfPresDot{i}"]);
+                        manipulation_dots.Add((PictureBox)this.Controls[$"sfManDot{i}"]);
+                        composure_dots.Add((PictureBox)this.Controls[$"sfCompDot{i}"]);
+                    }
+                    health_dots.Add((PictureBox)this.Controls[$"sfHealthDot{i}"]);
+                    willpower_dots.Add((PictureBox)this.Controls[$"sfWillpowerDot{i}"]);
+                    integrity_dots.Add((PictureBox)this.Controls[$"sfIntegrityDot{i}"]);
+                }
+                // Skill and Merit dots.
+                List<PictureBox> spb = new();
+                List<PictureBox> mpb = new();
+                for (int j = 0; j < 5; ++j)
+                {
+                    spb.Add((PictureBox)this.Controls[$"sfSkillDot{point}"]);
+                    if (i <= 8) { mpb.Add((PictureBox)this.Controls[$"sfMeritDot{point}"]); }
+                    ++point;
+                }
+                skill_dots.Add(spb);
+                if (i <= 8) { merit_dots.Add(mpb); }
+            }
         }
 
         private void InitializeImages()
         {
-            // I know it would have made sense to override checkbox or something to be round.
-            // But what works on one computer doesn't often work on another.
-            // So I went the easy route. 
-            string[] paths = {
-                Application.StartupPath + "/Resource/healthy.png",
-                Application.StartupPath + "/Resource/bashing.png",
-                Application.StartupPath + "/Resource/lethal.png",
-                Application.StartupPath + "/Resource/aggrivated.png",
-                Application.StartupPath + "/Resource/dotunchecked.png",
-                Application.StartupPath + "/Resource/dotchecked.png",
-                Application.StartupPath + "/Resource/cofd.ico"
-            };
-            this.Icon = Icon.ExtractAssociatedIcon(paths[6]);
-
-            healthy = Image.FromFile(paths[0]);
-            bashing = Image.FromFile(paths[1]);
-            lethal = Image.FromFile(paths[2]);
-            aggriv = Image.FromFile(paths[3]);
-            dotunch = Image.FromFile(paths[4]);
-            dotch = Image.FromFile(paths[5]);
+            
+            this.Icon = Properties.Resources.cofd;
+            healthy = Properties.Resources.healthy;
+            bashing = Properties.Resources.bashing;
+            lethal = Properties.Resources.lethal;
+            aggriv = Properties.Resources.aggrivated;
+            dotunch = Properties.Resources.dotunchecked;
+            dotch = Properties.Resources.dotchecked;
         }
 
         private void InitializeImageControls()
         {
+            // I know it would have made sense to override checkbox or something to be round.
+            // But what works on one computer doesn't often work on another.
+            // So I went the easy route. 
+
             // Dots
             foreach (Control c in Controls)
             {
@@ -61,11 +110,17 @@ namespace CofD_NPC
             }
 
             // Health states
-            List<PictureBox> health = new() { 
-                sfHealthState1, sfHealthState2, sfHealthState3, sfHealthState4, sfHealthState5,
-                sfHealthState6, sfHealthState7, sfHealthState8, sfHealthState9, sfHealthState10 
+            for (int i = 1; i <= 10; ++i) { 
+                PictureBox p = (PictureBox)this.Controls[$"sfHealthState{i}"];
+                p.Image = healthy;
+            }
+
+            // All attributes start with one dot.
+            List<PictureBox> attr = new()
+            {
+                sfIntDot1, sfWitsDot1, sfResDot1, sfStrDot1, sfDexDot1, sfStamDot1, sfPresDot1, sfManDot1, sfCompDot1
             };
-            foreach(PictureBox h in health) { h.Image = healthy; }
+            foreach(PictureBox a in attr) { a.Image = dotch; }
         }
 
         private void LoadNPC()
@@ -88,13 +143,17 @@ namespace CofD_NPC
                 sfDescTextBox.Text = SFNPC.Description;
                 sfConditionsTextBox.Text = SFNPC.Conditions;
                 sfAspirationsTextBox.Text = SFNPC.Aspirations;
+                for (int m = 0; m < SFNPC.Intelligence; ++m) { intelligence_dots[m].Image = dotch; }
+                for (int n = 0; n < SFNPC.Wits; ++n) { wits_dots[n].Image = dotch; }
+                for (int o = 0; o < SFNPC.Resolve; ++o) { resolve_dots[o].Image = dotch; }
+                for (int p = 0; p < SFNPC.Strength; ++p) { strength_dots[p].Image = dotch; }
+                for (int q = 0; q < SFNPC.Dexterity; ++q) { dexterity_dots[q].Image = dotch; }
+                for (int r = 0; r < SFNPC.Stamina; ++r) { stamina_dots[r].Image = dotch; }
+                for (int s = 0; s < SFNPC.Presence; ++s) { presence_dots[s].Image = dotch; }
+                for (int t = 0; t < SFNPC.Manipulation; ++t) { manipulation_dots[t].Image = dotch; }
+                for (int u = 0; u < SFNPC.Composure; ++u) { composure_dots[u].Image = dotch; }
 
-                List<PictureBox> wpdots = new()
-                {
-                    sfWillpowerDot1, sfWillpowerDot2, sfWillpowerDot3, sfWillpowerDot4, sfWillpowerDot5,
-                    sfWillpowerDot6, sfWillpowerDot7, sfWillpowerDot8, sfWillpowerDot9, sfWillpowerDot10
-                };
-                for (int h = 0; h < SFNPC.WillpowerDots; ++h) { wpdots[h].Image = dotch; }
+                for (int h = 0; h < SFNPC.WillpowerDots; ++h) { willpower_dots[h].Image = dotch; }
 
                 List<CheckBox> willpower = new()
                 {
@@ -103,137 +162,52 @@ namespace CofD_NPC
                 };
                 for (int i = 0; i < SFNPC.WillpowerCurrent; ++i) { willpower[i].Checked = true; }
 
-                List<PictureBox> integrity = new()
-                {
-                    sfIntegrityDot1, sfIntegrityDot2, sfIntegrityDot3, sfIntegrityDot4, sfIntegrityDot5,
-                    sfIntegrityDot6, sfIntegrityDot7, sfIntegrityDot8, sfIntegrityDot9, sfIntegrityDot10
-                };
-                for (int j = 0; j < SFNPC.Integrity; ++j) { integrity[j].Image = dotch; }
+                for (int j = 0; j < SFNPC.Integrity; ++j) { integrity_dots[j].Image = dotch; }
 
-                List<PictureBox> healthdot = new()
-                {
-                    sfHealthDot1, sfHealthDot2, sfHealthDot3, sfHealthDot4, sfHealthDot5,
-                    sfHealthDot6, sfHealthDot7, sfHealthDot8, sfHealthDot9, sfHealthDot10
-                };
-                for (int k = 0; k < SFNPC.HealthDots; ++k) { healthdot[k].Image = dotch; }
+                for (int k = 0; k < SFNPC.HealthDots; ++k) { health_dots[k].Image = dotch; }
 
-                List<PictureBox> healthstate = new()
+                for (int i = 1; i <= 10; ++i)
                 {
-                    sfHealthState1, sfHealthState2, sfHealthState3, sfHealthState4, sfHealthState5,
-                    sfHealthState6, sfHealthState7, sfHealthState8, sfHealthState9, sfHealthState10
-                };
-                if (SFNPC.HealthStates != null)
-                {
-                    for (int l = 0; l < SFNPC.HealthDots; ++l)
+                    PictureBox p = (PictureBox)this.Controls[$"sfHealthState{i}"];
+                    switch (SFNPC.HealthStates[i - 1])
                     {
-                        switch (SFNPC.HealthStates[l])
-                        {
-                            case 0: healthstate[l].Image = healthy; break;
-                            case 1: healthstate[l].Image = bashing; break;
-                            case 2: healthstate[l].Image = lethal; break;
-                            case 3: healthstate[l].Image = aggriv; break;
-                        }
+                        case 0: p.Image = healthy; break;
+                        case 1: p.Image = bashing; break;
+                        case 2: p.Image = lethal; break;
+                        case 3: p.Image = aggriv; break;
                     }
                 }
-                List<PictureBox> inte = new() { sfIntDot1, sfIntDot2, sfIntDot3, sfIntDot4, sfIntDot5 };
-                for (int m = 0; m < SFNPC.Intelligence; ++m) { inte[m].Image = dotch; }
 
-                List<PictureBox> wits = new() { sfWitsDot1, sfWitsDot2, sfWitsDot3, sfWitsDot4, sfWitsDot5 };
-                for (int n = 0; n < SFNPC.Wits; ++n) { wits[n].Image = dotch; }
-
-                List<PictureBox> res = new() { sfResDot1, sfResDot2, sfResDot3, sfResDot4, sfResDot5 };
-                for (int o = 0; o < SFNPC.Resolve; ++o) { res[o].Image = dotch; }
-
-                List<PictureBox> str = new() { sfStrDot1, sfStrDot2, sfStrDot3, sfStrDot4, sfStrDot5 };
-                for (int p = 0; p < SFNPC.Strength; ++p) { str[p].Image = dotch; }
-
-                List<PictureBox> dex = new() { sfDexDot1, sfDexDot2, sfDexDot3, sfDexDot4, sfDexDot5 };
-                for (int q = 0; q < SFNPC.Dexterity; ++q) { dex[q].Image = dotch; }
-
-                List<PictureBox> stam = new() { sfStamDot1, sfStamDot2, sfStamDot3, sfStamDot4, sfStamDot5 };
-                for (int r = 0; r < SFNPC.Stamina; ++r) { stam[r].Image = dotch; }
-
-                List<PictureBox> pres = new() { sfPresDot1, sfPresDot2, sfPresDot3, sfPresDot4, sfPresDot5 };
-                for (int s = 0; s < SFNPC.Presence; ++s) { pres[s].Image = dotch; }
-
-                List<PictureBox> man = new() { sfManDot1, sfManDot2, sfManDot3, sfManDot4, sfManDot5 };
-                for (int t = 0; t < SFNPC.Manipulation; ++t) { man[t].Image = dotch; }
-
-                List<PictureBox> comp = new() { sfCompDot1, sfCompDot2, sfCompDot3, sfCompDot4, sfCompDot5 };
-                for (int u = 0; u < SFNPC.Composure; ++u) { comp[u].Image = dotch; }
-
-                List<ComboBox> skills = new() { sfSkillComboBox1, sfSkillComboBox2, sfSkillComboBox3, sfSkillComboBox4, sfSkillComboBox5, sfSkillComboBox6,
-                    sfSkillComboBox7, sfSkillComboBox8, sfSkillComboBox9, sfSkillComboBox10, sfSkillComboBox11, sfSkillComboBox12
-                };
-                if (SFNPC.Skills != null) { for (int v = 0; v < 12; ++v) { skills[v].Text = SFNPC.Skills[v]; } }
-
-                // Create a list of all 60 skilldot pictureboxes.
-                List<PictureBox> skilldots = new();
-                foreach (Control c in Controls)
+                for (int i = 1; i <= 12; ++i)
                 {
-                    if (c.GetType() == typeof(PictureBox))
+                    ComboBox cb = (ComboBox)sfSkillsTableLayout.Controls[$"sfSkillComboBox{i}"];
+                    cb.Text = SFNPC.Skills[i - 1];
+                    if (i <= 8)
                     {
-                        PictureBox p = (PictureBox)c;
-                        if (p.Name.ToString().Contains("SkillDot"))
-                        {
-                            skilldots.Add(p);
-                        }
+                        TextBox tb = (TextBox)sfMeritsTableLayout.Controls[$"sfMeritTextBox{i}"];
+                        tb.Text = SFNPC.Merits[i - 1];
                     }
                 }
-                // It collects the list in proper numerical order, but backwards for some reason.
-                // It is only through the grace of this strange logic that everything is sorted properly.
-                skilldots.Reverse();
-                // Iterate through each of the 12 sets of five, marking them if appropriate.
-                int point = 0, val = 0;
+
+                // Iterate through each of the 12 sets of five skills, marking them if appropriate.
+                // Also iterates through the 8 sets of five merits.
+                int sval = 0, mval = 0;
                 for (int w = 0; w < 12; ++w)
                 {
-                    if (SFNPC.SkillDots != null) { val = SFNPC.SkillDots[w]; }
+                    if (SFNPC.SkillDots != null) { sval = SFNPC.SkillDots[w]; }
+                    if (w < 8) { mval = SFNPC.MeritDots[w]; }
                     for (int x = 0; x < 5; ++x)
                     {
-                        if (val > 0)
+                        if (sval > 0)
                         {
-                            skilldots[point].Image = dotch;
-                            --val;
+                            skill_dots[w][x].Image = dotch;
+                            --sval;
                         }
-                        ++point;
-                    }
-                }
-
-                List<TextBox> merits = new()
-                {
-                    sfMeritTextBox1, sfMeritTextBox2, sfMeritTextBox3, sfMeritTextBox4,
-                    sfMeritTextBox5, sfMeritTextBox6, sfMeritTextBox7, sfMeritTextBox8
-                };
-                if (SFNPC.Merits != null) { for (int y = 0; y < 8; ++y) { merits[y].Text = SFNPC.Merits[y]; } }
-
-                // Do the same exact thing as with skills.
-                List<PictureBox> meritdots = new();
-                foreach (Control c in Controls)
-                {
-                    if (c.GetType() == typeof(PictureBox))
-                    {
-                        PictureBox q = (PictureBox)c;
-                        if (q.Name.ToString().Contains("MeritDot"))
+                        if (mval > 0 && w < 8)
                         {
-                            meritdots.Add(q);
+                            merit_dots[w][x].Image = dotch;
+                            --mval;
                         }
-                    }
-                }
-                // This list too, is sorted automatically but backwards.
-                // Don't question why it does this, only be grateful it sorted properly.
-                meritdots.Reverse();
-                point = 0;
-                for (int z = 0; z < 8; ++z)
-                {
-                    if (SFNPC.MeritDots != null) { val = SFNPC.MeritDots[z]; }
-                    for (int a = 0; a < 5; ++a)
-                    {
-                        if (val > 0)
-                        {
-                            meritdots[point].Image = dotch;
-                            --val;
-                        }
-                        ++point;
                     }
                 }
             }
@@ -250,7 +224,7 @@ namespace CofD_NPC
                 CompressFile();
                 sfSaveLabel.Text = "Save. . . OK";
                 unsaved = false;
-            } catch (Exception ex)
+            } catch
             {
                 string m = "There was an error trying to save this NPC.\n";
                 m += $"\n\nTry deleting  and then try again.";
@@ -289,240 +263,130 @@ namespace CofD_NPC
             SFNPC.Description = sfDescTextBox.Text;
             SFNPC.Conditions = sfConditionsTextBox.Text;
             SFNPC.Aspirations = sfAspirationsTextBox.Text;
-            if (SFNPC.Skills != null)
+
+            for (int i = 1; i <= 12; ++i)
             {
-                SFNPC.Skills[0] = sfSkillComboBox1.Text;
-                SFNPC.Skills[1] = sfSkillComboBox2.Text;
-                SFNPC.Skills[2] = sfSkillComboBox3.Text;
-                SFNPC.Skills[3] = sfSkillComboBox4.Text;
-                SFNPC.Skills[4] = sfSkillComboBox5.Text;
-                SFNPC.Skills[5] = sfSkillComboBox6.Text;
-                SFNPC.Skills[6] = sfSkillComboBox7.Text;
-                SFNPC.Skills[7] = sfSkillComboBox8.Text;
-                SFNPC.Skills[8] = sfSkillComboBox9.Text;
-                SFNPC.Skills[9] = sfSkillComboBox10.Text;
-                SFNPC.Skills[10] = sfSkillComboBox11.Text;
-                SFNPC.Skills[11] = sfSkillComboBox12.Text;
-            }
-            if (SFNPC.Merits != null)
-            {
-                SFNPC.Merits[0] = sfMeritTextBox1.Text;
-                SFNPC.Merits[1] = sfMeritTextBox2.Text;
-                SFNPC.Merits[2] = sfMeritTextBox3.Text;
-                SFNPC.Merits[3] = sfMeritTextBox4.Text;
-                SFNPC.Merits[4] = sfMeritTextBox5.Text;
-                SFNPC.Merits[5] = sfMeritTextBox6.Text;
-                SFNPC.Merits[6] = sfMeritTextBox7.Text;
-                SFNPC.Merits[7] = sfMeritTextBox8.Text;
+                ComboBox cb = (ComboBox)this.sfSkillsTableLayout.Controls[$"sfSkillComboBox{i}"];
+                if (cb.Text != String.Empty) { SFNPC.Skills[i - 1] = cb.Text; }
+                if (i < 8)
+                {
+                    TextBox tb = (TextBox)this.sfMeritsTableLayout.Controls[$"sfMeritTextBox{i}"];
+                    if (tb.Text != String.Empty) { SFNPC.Merits[i - 1] = tb.Text; }
+                }
             }
         }
 
         private void SaveDots()
         {
             SFNPC.HealthDots = 0;
-            bool[] h = new bool[10];
-            h[0] = (sfHealthDot1.Image == dotch);
-            h[1] = (sfHealthDot2.Image == dotch);
-            h[2] = (sfHealthDot3.Image == dotch);
-            h[3] = (sfHealthDot4.Image == dotch);
-            h[4] = (sfHealthDot5.Image == dotch);
-            h[5] = (sfHealthDot6.Image == dotch);
-            h[6] = (sfHealthDot7.Image == dotch);
-            h[7] = (sfHealthDot8.Image == dotch);
-            h[8] = (sfHealthDot9.Image == dotch);
-            h[9] = (sfHealthDot10.Image == dotch);
-            foreach (bool b in h) { if (b) { ++SFNPC.HealthDots; } }
+            foreach (PictureBox p in health_dots) { if (p.Image == dotch) { ++SFNPC.HealthDots; } }
 
             SFNPC.WillpowerDots = 0;
-            h[0] = (sfWillpowerDot1.Image == dotch);
-            h[1] = (sfWillpowerDot2.Image == dotch);
-            h[2] = (sfWillpowerDot3.Image == dotch);
-            h[3] = (sfWillpowerDot4.Image == dotch);
-            h[4] = (sfWillpowerDot5.Image == dotch);
-            h[5] = (sfWillpowerDot6.Image == dotch);
-            h[6] = (sfWillpowerDot7.Image == dotch);
-            h[7] = (sfWillpowerDot8.Image == dotch);
-            h[8] = (sfWillpowerDot9.Image == dotch);
-            h[9] = (sfWillpowerDot10.Image == dotch);
-            foreach (bool b in h) { if (b) { ++SFNPC.WillpowerDots; } }
+            foreach (PictureBox p in willpower_dots) { if (p.Image == dotch) { ++SFNPC.WillpowerDots; } }
 
             SFNPC.WillpowerCurrent = 0;
-            h[0] = (sfWillpowerCheck1.Checked);
-            h[1] = (sfWillpowerCheck2.Checked);
-            h[2] = (sfWillpowerCheck3.Checked);
-            h[3] = (sfWillpowerCheck4.Checked);
-            h[4] = (sfWillpowerCheck5.Checked);
-            h[5] = (sfWillpowerCheck6.Checked);
-            h[6] = (sfWillpowerCheck7.Checked);
-            h[7] = (sfWillpowerCheck8.Checked);
-            h[8] = (sfWillpowerCheck9.Checked);
-            h[9] = (sfWillpowerCheck10.Checked);
-            foreach (bool b in h) { if (b) { ++SFNPC.WillpowerCurrent; } }
+            for (int i = 1; i < 10; ++i)
+            {
+                CheckBox cb = (CheckBox)this.Controls[$"sfWillpowerCheck{i}"];
+                if (cb.Checked) { ++SFNPC.WillpowerCurrent; }
+            } 
 
             SFNPC.Integrity = 0;
-            h[0] = (sfIntegrityDot1.Image == dotch);
-            h[1] = (sfIntegrityDot2.Image == dotch);
-            h[2] = (sfIntegrityDot3.Image == dotch);
-            h[3] = (sfIntegrityDot4.Image == dotch);
-            h[4] = (sfIntegrityDot5.Image == dotch);
-            h[5] = (sfIntegrityDot6.Image == dotch);
-            h[6] = (sfIntegrityDot7.Image == dotch);
-            h[7] = (sfIntegrityDot8.Image == dotch);
-            h[8] = (sfIntegrityDot9.Image == dotch);
-            h[9] = (sfIntegrityDot10.Image == dotch);
-            foreach (bool b in h) { if (b) { ++SFNPC.Integrity; } }
+            foreach (PictureBox p in integrity_dots) { if (p.Image == dotch) { ++SFNPC.Integrity; } }
 
-            bool[] d = new bool[5];
             SFNPC.Intelligence = 0;
-            d[0] = (sfIntDot1.Image == dotch);
-            d[1] = (sfIntDot2.Image == dotch);
-            d[2] = (sfIntDot3.Image == dotch);
-            d[3] = (sfIntDot4.Image == dotch);
-            d[4] = (sfIntDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Intelligence; } }
+            foreach (PictureBox p in intelligence_dots) { if (p.Image == dotch) { ++SFNPC.Intelligence; } }
 
             SFNPC.Wits = 0;
-            d[0] = (sfWitsDot1.Image == dotch);
-            d[1] = (sfWitsDot2.Image == dotch);
-            d[2] = (sfWitsDot3.Image == dotch);
-            d[3] = (sfWitsDot4.Image == dotch);
-            d[4] = (sfWitsDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Wits; } }
+            foreach (PictureBox p in wits_dots) { if (p.Image == dotch) { ++SFNPC.Wits; } }
 
             SFNPC.Resolve = 0;
-            d[0] = (sfResDot1.Image == dotch);
-            d[1] = (sfResDot2.Image == dotch);
-            d[2] = (sfResDot3.Image == dotch);
-            d[3] = (sfResDot4.Image == dotch);
-            d[4] = (sfResDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Resolve; } }
+            foreach (PictureBox p in resolve_dots) { if (p.Image == dotch) { ++SFNPC.Resolve; } }
 
             SFNPC.Strength = 0;
-            d[0] = (sfStrDot1.Image == dotch);
-            d[1] = (sfStrDot2.Image == dotch);
-            d[2] = (sfStrDot3.Image == dotch);
-            d[3] = (sfStrDot4.Image == dotch);
-            d[4] = (sfStrDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Strength; } }
+            foreach (PictureBox p in strength_dots) { if (p.Image == dotch) { ++SFNPC.Strength; } }
 
             SFNPC.Dexterity = 0;
-            d[0] = (sfDexDot1.Image == dotch);
-            d[1] = (sfDexDot2.Image == dotch);
-            d[2] = (sfDexDot3.Image == dotch);
-            d[3] = (sfDexDot4.Image == dotch);
-            d[4] = (sfDexDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Dexterity; } }
+            foreach (PictureBox p in dexterity_dots) { if (p.Image == dotch) { ++SFNPC.Dexterity; } }
 
             SFNPC.Stamina = 0;
-            d[0] = (sfStamDot1.Image == dotch);
-            d[1] = (sfStamDot2.Image == dotch);
-            d[2] = (sfStamDot3.Image == dotch);
-            d[3] = (sfStamDot4.Image == dotch);
-            d[4] = (sfStamDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Stamina; } }
+            foreach (PictureBox p in stamina_dots) { if (p.Image == dotch) { ++SFNPC.Stamina; } }
 
             SFNPC.Presence = 0;
-            d[0] = (sfPresDot1.Image == dotch);
-            d[1] = (sfPresDot2.Image == dotch);
-            d[2] = (sfPresDot3.Image == dotch);
-            d[3] = (sfPresDot4.Image == dotch);
-            d[4] = (sfPresDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Presence; } }
+            foreach (PictureBox p in presence_dots) { if (p.Image == dotch) { ++SFNPC.Presence; } }
 
             SFNPC.Manipulation = 0;
-            d[0] = (sfIntDot1.Image == dotch);
-            d[1] = (sfIntDot2.Image == dotch);
-            d[2] = (sfIntDot3.Image == dotch);
-            d[3] = (sfIntDot4.Image == dotch);
-            d[4] = (sfIntDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Manipulation; } }
+            foreach (PictureBox p in manipulation_dots) { if (p.Image == dotch) { ++SFNPC.Manipulation; } }
 
             SFNPC.Composure = 0;
-            d[0] = (sfCompDot1.Image == dotch);
-            d[1] = (sfCompDot2.Image == dotch);
-            d[2] = (sfCompDot3.Image == dotch);
-            d[3] = (sfCompDot4.Image == dotch);
-            d[4] = (sfCompDot5.Image == dotch);
-            foreach (bool b in d) { if (b) { ++SFNPC.Composure; } }
+            foreach (PictureBox p in composure_dots) { if (p.Image == dotch) { ++SFNPC.Composure; } }
 
-            // Repurposed code from the load function. 
-            List<PictureBox> skilldots = new();
-            foreach (Control c in Controls)
+            for (int i = 0; i < 12; ++i)
             {
-                if (c.GetType() == typeof(PictureBox))
+                int val = 0;
+                foreach (PictureBox p in skill_dots[i]) { if (p.Image == dotch) { ++val; } }
+                SFNPC.SkillDots[i] = val;
+                val = 0;
+                if (i < 8)
                 {
-                    PictureBox p = (PictureBox)c;
-                    if (p.Name.ToString().Contains("SkillDot")) { skilldots.Add(p); }
-                }
-            }
-            skilldots.Reverse();
-            int point = 0, val = 0;
-            if (SFNPC.SkillDots != null)
-            {
-                for (int i = 0; i < 12; ++i)
-                {
-                    for (int j = 0; j < 5; ++j)
-                    {
-                        if (skilldots[point].Image == dotch) { ++val; }
-                        ++point;
-                    }
-                    SFNPC.SkillDots[i] = (byte)val;
-                    val = 0;
-                }
-            }
-
-            List<PictureBox> meritdots = new();
-            foreach (Control c in Controls)
-            {
-                if (c.GetType() == typeof(PictureBox))
-                {
-                    PictureBox p = (PictureBox)c;
-                    if (p.Name.ToString().Contains("MeritDot")) { meritdots.Add(p); }
-                }
-            }
-            meritdots.Reverse();
-            point = 0; 
-            val = 0;
-            if (SFNPC.MeritDots != null)
-            {
-                for (int i = 0; i < 8; ++i)
-                {
-                    for (int j = 0; j < 5; ++j)
-                    {
-                        if (meritdots[point].Image == dotch) { ++val; }
-                        ++point;
-                    }
-                    SFNPC.MeritDots[i] = (byte)val;
-                    val = 0;
+                    foreach (PictureBox p in merit_dots[i]) { if (p.Image == dotch) { ++val; } }
+                    SFNPC.MeritDots[i] = val;
                 }
             }
         }
 
         private void SaveHealthStates()
         {
-            List<PictureBox> hs = new()
+            for (int i = 1; i <= 10; ++i)
             {
-                sfHealthState1, sfHealthState2, sfHealthState3, sfHealthState4, sfHealthState5,
-                sfHealthState6, sfHealthState7, sfHealthState8, sfHealthState9, sfHealthState10
-            };
-            for (int i = 0; i < 10; ++i)
-            {
-                if (SFNPC.HealthStates != null)
-                {
-                    if (hs[i].Image == healthy) { SFNPC.HealthStates[i] = 0; continue; }
-                    if (hs[i].Image == bashing) { SFNPC.HealthStates[i] = 1; continue; }
-                    if (hs[i].Image == lethal) { SFNPC.HealthStates[i] = 2; continue; }
-                    if (hs[i].Image == aggriv) { SFNPC.HealthStates[i] = 3; continue; }
-                }
+                PictureBox p = (PictureBox)this.Controls[$"sfHealthState{i}"];
+                if (p.Image == healthy) { SFNPC.HealthStates[i - 1] = 0; continue; }
+                if (p.Image == bashing) { SFNPC.HealthStates[i - 1] = 1; continue; }
+                if (p.Image == lethal) { SFNPC.HealthStates[i - 1] = 2; continue; }
+                if (p.Image == aggriv) { SFNPC.HealthStates[i - 1] = 3; continue; }
             }
         }
 
         private void Dot_Click(object sender, EventArgs e)
         {
-            PictureBox im = (PictureBox)sender;
-            if (im.Image == dotunch) { im.Image = dotch; }
-            else { im.Image = dotunch; }
+            PictureBox p = (PictureBox)sender;
+            string name = p.Name;
+            int index = name.LastIndexOf('t');
+            ++index;
+            name = name[..index];
+            string number = new (p.Name.Where(Char.IsDigit).ToArray());
+            int num = Int32.Parse(number), max, min;
+
+            if (name.Contains("Skill") || name.Contains("Merit"))
+            {
+                int last = number[^1] - '0';
+                if (last is >= 1 and <= 5)
+                { max = 5 * (int)Math.Ceiling(num / 5.0); } 
+                else { max = 10 * (int)Math.Ceiling(num / 10.0); }
+                min = max - 4;
+                if (min <= 0) { min = 1; }
+            } else
+            {
+                if (name.Contains("Health") || name.Contains("Willpower") || name.Contains("Integrity")) { max = 10; }
+                else { max = 5; }
+                min = 1;
+                
+            }
+            for (int i = max; i >= min; --i)
+            {
+                p = (PictureBox)this.Controls[name + $"{i}"];
+                MouseEventArgs ms = (MouseEventArgs)e;
+                if (i > num || ms.Button == MouseButtons.Right) { p.Image = dotunch; }
+                else { p.Image = dotch; }
+            }
+
             Unsaved();
+        }
+
+        private void Dot_DoubleClick(object sender, EventArgs e)
+        {
+            PictureBox p = (PictureBox)sender;
+            p.Image = dotunch;
         }
 
         private void InitButton_Click(object sender, EventArgs e)
@@ -530,11 +394,9 @@ namespace CofD_NPC
             Random r = new();
             int d = r.Next(1, 10);
             int i = 0;
-            List<PictureBox> dexcomp = new()
-            {
-                sfDexDot1, sfDexDot2, sfDexDot3, sfDexDot4, sfDexDot5,
-                sfCompDot1, sfCompDot2, sfCompDot3, sfCompDot4, sfCompDot5
-            };
+            List<PictureBox> dexcomp = new();
+            dexcomp.AddRange(dexterity_dots);
+            dexcomp.AddRange(composure_dots);
             foreach(PictureBox p in dexcomp) { if (p.Image == dotch) { ++i; } }
 
             string m = $"Rolled: {d}\nMod: {i}\nTotal: {d+i}";
@@ -578,6 +440,50 @@ namespace CofD_NPC
                 if ((SFNPC.Merits[j] != String.Empty) && (SFNPC.MeritDots[j] == 0)) { return false; }
             }
             return true;
+        }
+
+        private void SettingsButton_Click(object sender, EventArgs e)
+        {
+            string m = "Is the text on the form fucked? If so would you like to fix it?\n";
+            m += "Click \"no\" to put it back the way it was. This setting is persistent.";
+            var result = MessageBox.Show(m, "?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            string path = Application.StartupPath + "/defuck.txt";
+            if (result == DialogResult.Cancel) { return; }
+            UnfuckText((result == DialogResult.Yes));
+            var allLines = File.ReadAllLines(path);
+            allLines[0] = (result == DialogResult.Yes) ? "enable" : "disable";
+            File.WriteAllLines(path, allLines);
+        }
+
+        private void UnfuckText(bool fuck) // true means text is unfucked, false means text is fucked.
+        {
+            foreach (Control c in Controls)
+            {
+                if (c.GetType() == typeof(Label))
+                {
+                    Label l = (Label)c;
+                    string f = l.Font.Name;
+                    double s = l.Font.Size;
+                    if (fuck) { s /= 1.25; }
+                    else { s *= 1.25; }
+                    l.Font = new Font(f, (float)s);
+                }
+                else if (c.GetType() == typeof(TableLayoutPanel))
+                {
+                    foreach (Control control in c.Controls)
+                    {
+                        if (control.GetType() == typeof(Label))
+                        {
+                            Label l = (Label)control;
+                            string f = l.Font.Name;
+                            double s = l.Font.Size;
+                            if (fuck) { s /= 1.25; }
+                            else { s *= 1.25; }
+                            l.Font = new Font(f, (float)s);
+                        }
+                    }
+                }
+            }
         }
 
         private void HealthState_Click(object sender, EventArgs e)

@@ -304,6 +304,7 @@
             this.sfSaveButton = new System.Windows.Forms.Button();
             this.sfRollDiceButton = new System.Windows.Forms.Button();
             this.sfSaveLabel = new System.Windows.Forms.Label();
+            this.sfSettingsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.sfHealthDot1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sfHealthState1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sfHealthDot2)).BeginInit();
@@ -907,7 +908,7 @@
             // 
             this.sfWillpowerLabel.AutoSize = true;
             this.sfWillpowerLabel.Font = new System.Drawing.Font("Elephant", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.sfWillpowerLabel.Location = new System.Drawing.Point(108, 200);
+            this.sfWillpowerLabel.Location = new System.Drawing.Point(105, 200);
             this.sfWillpowerLabel.Name = "sfWillpowerLabel";
             this.sfWillpowerLabel.Size = new System.Drawing.Size(92, 21);
             this.sfWillpowerLabel.TabIndex = 49;
@@ -1147,7 +1148,7 @@
             // 
             this.sfIntegrityLabel.AutoSize = true;
             this.sfIntegrityLabel.Font = new System.Drawing.Font("Elephant", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.sfIntegrityLabel.Location = new System.Drawing.Point(113, 258);
+            this.sfIntegrityLabel.Location = new System.Drawing.Point(110, 258);
             this.sfIntegrityLabel.Name = "sfIntegrityLabel";
             this.sfIntegrityLabel.Size = new System.Drawing.Size(83, 21);
             this.sfIntegrityLabel.TabIndex = 70;
@@ -4098,11 +4099,21 @@
             this.sfSaveLabel.Size = new System.Drawing.Size(0, 13);
             this.sfSaveLabel.TabIndex = 253;
             // 
+            // sfSettingsButton
+            // 
+            this.sfSettingsButton.Location = new System.Drawing.Point(670, 9);
+            this.sfSettingsButton.Name = "sfSettingsButton";
+            this.sfSettingsButton.Size = new System.Drawing.Size(23, 23);
+            this.sfSettingsButton.TabIndex = 254;
+            this.sfSettingsButton.Text = "?";
+            this.sfSettingsButton.UseVisualStyleBackColor = true;
+            this.sfSettingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
+            // 
             // SheetForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(705, 623);
+            this.Controls.Add(this.sfSettingsButton);
             this.Controls.Add(this.sfSaveLabel);
             this.Controls.Add(this.sfRollDiceButton);
             this.Controls.Add(this.sfSaveButton);
@@ -4817,5 +4828,6 @@
         private Button sfSaveButton;
         private Button sfRollDiceButton;
         private Label sfSaveLabel;
+        private Button sfSettingsButton;
     }
 }
