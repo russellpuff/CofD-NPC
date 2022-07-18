@@ -19,9 +19,9 @@ namespace CofD_NPC
                 LoadNPC();
             }
             else { SFNPC = new NPC(); }
-
-            string title = (sfNameTextBox.Text == String.Empty) ? "Unnamed NPC" : sfNameLabel.Text;
+            string title = (sfNameTextBox.Text == String.Empty) ? "Unnamed NPC" : sfNameTextBox.Text;
             this.Text = title;
+            unsaved = false;
         }
 
         private void InitializeImages()
@@ -76,15 +76,15 @@ namespace CofD_NPC
             if (SFNPC != null)
             {
                 sfNameTextBox.Text = SFNPC.Name;
-                if (SFNPC.Age != null) { sfAgeNumUpDown.Value = (decimal)SFNPC.Age; }
+                sfAgeNumUpDown.Value = (int)SFNPC.Age;
                 sfVirtueComboBox.Text = SFNPC.Virtue;
                 sfViceComboBox.Text = SFNPC.Vice;
                 sfConceptTextBox.Text = SFNPC.Concept;
-                if (SFNPC.Size != null) { sfSizeNumUpDown.Value = (decimal)SFNPC.Size; }
-                if (SFNPC.Speed != null) { sfSpeedNumUpDown.Value = (decimal)SFNPC.Speed; }
-                if (SFNPC.Defense != null) { sfDefenseNumUpDown.Value = (decimal)SFNPC.Defense; }
+                sfSizeNumUpDown.Value = (int)SFNPC.Size;
+                sfSpeedNumUpDown.Value = (int)SFNPC.Speed;
+                sfDefenseNumUpDown.Value = (int)SFNPC.Defense;
                 sfArmorTextBox.Text = SFNPC.Armor;
-                if (SFNPC.Initiative != null) { sfInitNumUpDown.Value = (decimal)SFNPC.Initiative; }
+                sfInitNumUpDown.Value = (int)SFNPC.Initiative;
                 sfDescTextBox.Text = SFNPC.Description;
                 sfConditionsTextBox.Text = SFNPC.Conditions;
                 sfAspirationsTextBox.Text = SFNPC.Aspirations;
@@ -239,7 +239,7 @@ namespace CofD_NPC
             }
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object? sender, EventArgs? e)
         {
             sfSaveLabel.Text = "Save. . .";
             try
@@ -253,8 +253,7 @@ namespace CofD_NPC
             } catch (Exception ex)
             {
                 string m = "There was an error trying to save this NPC.\n";
-                m += ex.Message;
-                m += "\n\nTry deleting " + SFNPC.ID.ToString() + ".npc and then try again.";
+                m += $"\n\nTry deleting  and then try again.";
                 MessageBox.Show(m, "Save error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 sfSaveLabel.Text = "Save failed";
             }
@@ -278,15 +277,15 @@ namespace CofD_NPC
         private void SaveValues()
         {
             SFNPC.Name = sfNameTextBox.Text;
-            SFNPC.Age = (int)sfAgeNumUpDown.Value;
+            SFNPC.Age = (byte)sfAgeNumUpDown.Value;
             SFNPC.Virtue = sfVirtueComboBox.Text;
             SFNPC.Vice = sfViceComboBox.Text;
             SFNPC.Concept = sfConceptTextBox.Text;
-            SFNPC.Size = (int)sfSizeNumUpDown.Value;
-            SFNPC.Speed = (int)sfSpeedNumUpDown.Value;
-            SFNPC.Defense = (int)sfDefenseNumUpDown.Value;
+            SFNPC.Size = (byte)sfSizeNumUpDown.Value;
+            SFNPC.Speed = (byte)sfSpeedNumUpDown.Value;
+            SFNPC.Defense = (byte)sfDefenseNumUpDown.Value;
             SFNPC.Armor = sfArmorTextBox.Text;
-            SFNPC.Initiative = (int)sfInitNumUpDown.Value;
+            SFNPC.Initiative = (byte)sfInitNumUpDown.Value;
             SFNPC.Description = sfDescTextBox.Text;
             SFNPC.Conditions = sfConditionsTextBox.Text;
             SFNPC.Aspirations = sfAspirationsTextBox.Text;
@@ -467,7 +466,7 @@ namespace CofD_NPC
                         if (skilldots[point].Image == dotch) { ++val; }
                         ++point;
                     }
-                    SFNPC.SkillDots[i] = val;
+                    SFNPC.SkillDots[i] = (byte)val;
                     val = 0;
                 }
             }
@@ -493,7 +492,7 @@ namespace CofD_NPC
                         if (meritdots[point].Image == dotch) { ++val; }
                         ++point;
                     }
-                    SFNPC.MeritDots[i] = val;
+                    SFNPC.MeritDots[i] = (byte)val;
                     val = 0;
                 }
             }
@@ -524,6 +523,61 @@ namespace CofD_NPC
             if (im.Image == dotunch) { im.Image = dotch; }
             else { im.Image = dotunch; }
             Unsaved();
+        }
+
+        private void InitButton_Click(object sender, EventArgs e)
+        {
+            Random r = new();
+            int d = r.Next(1, 10);
+            int i = 0;
+            List<PictureBox> dexcomp = new()
+            {
+                sfDexDot1, sfDexDot2, sfDexDot3, sfDexDot4, sfDexDot5,
+                sfCompDot1, sfCompDot2, sfCompDot3, sfCompDot4, sfCompDot5
+            };
+            foreach(PictureBox p in dexcomp) { if (p.Image == dotch) { ++i; } }
+
+            string m = $"Rolled: {d}\nMod: {i}\nTotal: {d+i}";
+            MessageBox.Show(m, "Initiative", MessageBoxButtons.OK);
+        }
+
+        private void RollDiceButton_Click(object sender, EventArgs e)
+        {
+            if (unsaved)
+            {
+                const string m = "NPC must be saved before Dice Roller can be used. Save now?";
+                var result = MessageBox.Show(m, "Dice Roller", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                { SaveButton_Click(null, null); }
+                else { return; }
+            }
+
+            if (!ValidateSkillsMerits()) {
+                string m = "Detected skills or merits that have dots but no name, or vice versa.\n";
+                m += "The die roller breaks if you have any skills or merits that break this rule. There is currently no fix besides ";
+                m += "forcing you to manually change it.";
+                MessageBox.Show(m, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; 
+            }
+            DiceForm ds = new(SFNPC.Skills, SFNPC.SkillDots, SFNPC.Merits, SFNPC.MeritDots, SFNPC.HealthDots, SFNPC.WillpowerDots,
+                SFNPC.Integrity, SFNPC.Intelligence, SFNPC.Wits, SFNPC.Resolve, SFNPC.Strength, SFNPC.Dexterity, SFNPC.Stamina,
+                SFNPC.Presence, SFNPC.Manipulation, SFNPC.Composure);
+            ds.ShowDialog();
+        }
+
+        private bool ValidateSkillsMerits()
+        {
+            for (int i = 0; i < 12; ++i)
+            {
+                if ((SFNPC.Skills[i] == String.Empty) && (SFNPC.SkillDots[i] > 0)) { return false; }
+                if ((SFNPC.Skills[i] != String.Empty) && (SFNPC.SkillDots[i] == 0)) { return false; }
+            }
+            for (int j = 0; j < 8; ++j)
+            {
+                if ((SFNPC.Merits[j] == String.Empty) && (SFNPC.MeritDots[j] > 0)) { return false; }
+                if ((SFNPC.Merits[j] != String.Empty) && (SFNPC.MeritDots[j] == 0)) { return false; }
+            }
+            return true;
         }
 
         private void HealthState_Click(object sender, EventArgs e)

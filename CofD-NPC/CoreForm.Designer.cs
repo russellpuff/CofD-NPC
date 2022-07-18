@@ -96,6 +96,7 @@
             this.cfNPCIDColumn});
             this.cfTableLayout.SetColumnSpan(this.cfDataGrid, 2);
             this.cfDataGrid.Location = new System.Drawing.Point(3, 3);
+            this.cfDataGrid.MultiSelect = false;
             this.cfDataGrid.Name = "cfDataGrid";
             this.cfDataGrid.ReadOnly = true;
             this.cfDataGrid.RowHeadersVisible = false;
@@ -107,20 +108,20 @@
             // 
             // cfNPCNameColumn
             // 
-            this.cfNPCNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.cfNPCNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.cfNPCNameColumn.HeaderText = "Name";
             this.cfNPCNameColumn.Name = "cfNPCNameColumn";
             this.cfNPCNameColumn.ReadOnly = true;
             this.cfNPCNameColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.cfNPCNameColumn.Width = 64;
             // 
             // cfNPCDescriptionColumn
             // 
-            this.cfNPCDescriptionColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cfNPCDescriptionColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.cfNPCDescriptionColumn.HeaderText = "Description";
             this.cfNPCDescriptionColumn.Name = "cfNPCDescriptionColumn";
             this.cfNPCDescriptionColumn.ReadOnly = true;
             this.cfNPCDescriptionColumn.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.cfNPCDescriptionColumn.Width = 92;
             // 
             // cfNPCIDColumn
             // 

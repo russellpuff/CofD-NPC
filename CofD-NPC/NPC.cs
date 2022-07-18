@@ -1,40 +1,106 @@
-﻿namespace CofD_NPC
+﻿using System.Xml.Serialization;
+
+namespace CofD_NPC
 {
     [Serializable]
+    [XmlRoot("NPCRoot")]
     public class NPC
     {
+        [XmlAttribute("ID")]
         public long ID { get; set; }
-        public string? Name { get; set; }
-        public int? Age { get; set; }
-        public string? Virtue { get; set; }
-        public string? Vice { get; set; }
-        public string? Concept { get; set; }
-        public int? HealthDots { get; set; }
-        public int[]? HealthStates { get; set; }
-        public int? WillpowerDots { get; set; }
-        public int? WillpowerCurrent { get; set; }
-        public int? Integrity { get; set; }
-        public int? Size { get; set; }
-        public int? Speed { get; set; }
-        public int? Defense { get; set; }
-        public string? Armor { get; set; }
-        public int? Initiative { get; set; }
-        public string? Description { get; set; }
-        public int? Intelligence { get; set; }
-        public int? Wits { get; set; }
-        public int? Resolve { get; set; }
-        public int? Strength { get; set; }
-        public int? Dexterity { get; set; }
-        public int? Stamina { get; set; }
-        public int? Presence { get; set; }
-        public int? Manipulation { get; set; }
-        public int? Composure { get; set; }
-        public string[]? Skills { get; set; }
-        public int[]? SkillDots { get; set; }
-        public string[]? Merits { get; set; }
-        public int[]? MeritDots { get; set; }
-        public string? Conditions { get; set; }
-        public string? Aspirations { get; set; }
+
+        [XmlAttribute("Name")]
+        public string Name { get; set; }
+
+        [XmlAttribute("Age")]
+        public int Age { get; set; }
+
+        [XmlAttribute("Virtue")]
+        public string Virtue { get; set; }
+
+        [XmlAttribute("Vice")]
+        public string Vice { get; set; }
+
+        [XmlAttribute("Concept")]
+        public string Concept { get; set; }
+
+        [XmlAttribute("HealthDots")]
+        public int HealthDots { get; set; }
+
+        [XmlAttribute("HealthStates")]
+        public int[] HealthStates { get; set; }
+
+        [XmlAttribute("WillpowerDots")]
+        public int WillpowerDots { get; set; }
+
+        [XmlAttribute("WillpowerCurrent")]
+        public int WillpowerCurrent { get; set; }
+
+        [XmlAttribute("Integrity")]
+        public int Integrity { get; set; }
+
+        [XmlAttribute("Size")]
+        public int Size { get; set; }
+
+        [XmlAttribute("Speed")]
+        public int Speed { get; set; }
+
+        [XmlAttribute("Defense")]
+        public int Defense { get; set; }
+
+        [XmlAttribute("Armor")]
+        public string Armor { get; set; }
+
+        [XmlAttribute("Initiative")]
+        public int Initiative { get; set; }
+
+        [XmlAttribute("Description")]
+        public string Description { get; set; }
+
+        [XmlAttribute("Intelligence")]
+        public int Intelligence { get; set; }
+
+        [XmlAttribute("Wits")]
+        public int Wits { get; set; }
+
+        [XmlAttribute("Resolve")]
+        public int Resolve { get; set; }
+
+        [XmlAttribute("Strength")]
+        public int Strength { get; set; }
+
+        [XmlAttribute("Dexterity")]
+        public int Dexterity { get; set; }
+
+        [XmlAttribute("Stamina")]
+        public int Stamina { get; set; }
+
+        [XmlAttribute("Presence")]
+        public int Presence { get; set; }
+
+        [XmlAttribute("Manipulation")]
+        public int Manipulation { get; set; }
+
+        [XmlAttribute("Composure")]
+        public int Composure { get; set; }
+
+        [XmlAttribute("Skills")]
+        public string[] Skills { get; set; }
+
+        [XmlAttribute("SkillDots")]
+        public int[] SkillDots { get; set; }
+
+        [XmlAttribute("Merits")]
+        public string[] Merits { get; set; }
+
+        [XmlAttribute("MeritDots")]
+        public int[] MeritDots { get; set; }
+
+        [XmlAttribute("Conditions")]
+        public string Conditions { get; set; }
+
+        [XmlAttribute("Aspirations")]
+        public string Aspirations { get; set; }
 
         public NPC()
         {

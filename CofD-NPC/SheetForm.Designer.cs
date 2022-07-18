@@ -1438,6 +1438,7 @@
             this.sfInitButton.TabIndex = 82;
             this.sfInitButton.Text = "Roll Initiative";
             this.sfInitButton.UseVisualStyleBackColor = true;
+            this.sfInitButton.Click += new System.EventHandler(this.InitButton_Click);
             // 
             // sfDescriptionLabel
             // 
@@ -4086,6 +4087,7 @@
             this.sfRollDiceButton.TabIndex = 252;
             this.sfRollDiceButton.Text = "Roll Dice";
             this.sfRollDiceButton.UseVisualStyleBackColor = true;
+            this.sfRollDiceButton.Click += new System.EventHandler(this.RollDiceButton_Click);
             // 
             // sfSaveLabel
             // 
@@ -4331,6 +4333,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "SheetForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SheetForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SheetForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.sfHealthDot1)).EndInit();

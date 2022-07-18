@@ -34,12 +34,7 @@ namespace CofD_NPC
         {
             SheetForm sf = new();
             sf.Show();
-            if (sf.DialogResult == DialogResult.OK)
-            {
-                NPCs.Add(sf.SFNPC);
-                cfDataGrid.Rows.Add(sf.SFNPC.Name, sf.SFNPC.Description, sf.SFNPC.ID);
-                cfDataGrid.Refresh();
-            }
+            sf.FormClosed += new FormClosedEventHandler(NewFormClosed);
         }
 
         private bool CheckForResources()
@@ -73,7 +68,6 @@ namespace CofD_NPC
             DirectoryInfo di = new(path);
             foreach (var file in di.GetFiles("*.npc"))
             {
-                
                 try
                 {
                     NPC n = DecompressFile(file);
@@ -82,7 +76,7 @@ namespace CofD_NPC
                     cfDataGrid.Refresh();
                 } catch
                 {
-                    string m = "File " + file.Name + " was corrupted and could not be loaded.";
+                    string m = "File " + file.Name + " was corrupted and could not be loaded.\n";
                     MessageBox.Show(m, "Corrupt file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -93,11 +87,9 @@ namespace CofD_NPC
             using FileStream fs = new(file.FullName, FileMode.Open, FileAccess.Read);
             using MemoryStream ums = new();
             using (DeflateStream ds = new(fs, CompressionMode.Decompress)) { ds.CopyTo(ums); }
-            using FileStream printlog = File.Create(Application.StartupPath + "/log.xml");
-            ums.WriteTo(printlog);
+            ums.Position = 0;
             XmlSerializer xs = new(typeof(NPC));
-            var n = xs.Deserialize(ums);
-            return (NPC)n;
+            return (NPC)xs.Deserialize(ums);
         }
 
         private void DataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -115,19 +107,41 @@ namespace CofD_NPC
                 }
                 SheetForm sf = new(NPCs[idx]);
                 sf.Show();
-                if (sf.DialogResult == DialogResult.OK)
-                {
-                    cfDataGrid.SelectedCells[0].Value = NPCs[idx].Name;
-                    cfDataGrid.SelectedCells[1].Value = NPCs[idx].Description;
-                    cfDataGrid.Refresh();
-                }
+                sf.FormClosed += new FormClosedEventHandler(ExistingFormClosed);
             } catch { }
             
         }
 
         private void DeleteNPCButton_Click(object sender, EventArgs e)
         {
-            
+            try {
+                string path = Application.StartupPath + "/NPC/" + cfDataGrid.SelectedCells[2].Value + ".npc";
+                File.Delete(path);
+                NPCs.RemoveAll(p => p.ID == (long)cfDataGrid.SelectedCells[2].Value);
+                cfDataGrid.Rows.RemoveAt(cfDataGrid.CurrentCell.RowIndex);
+            } catch { }
+        }
+
+        private void NewFormClosed(object sender, EventArgs e)
+        {
+            SheetForm sheet = (SheetForm)sender;
+            if (sheet.DialogResult == DialogResult.OK)
+            {
+                NPCs.Add(sheet.SFNPC);
+                cfDataGrid.Rows.Add(sheet.SFNPC.Name, sheet.SFNPC.Description, sheet.SFNPC.ID);
+                cfDataGrid.Refresh();
+            }
+        }
+
+        private void ExistingFormClosed(object sender, EventArgs e)
+        {
+            SheetForm sheet = (SheetForm)sender;
+            if (sheet.DialogResult == DialogResult.OK)
+            {
+                cfDataGrid.SelectedCells[0].Value = sheet.SFNPC.Name;
+                cfDataGrid.SelectedCells[1].Value = sheet.SFNPC.Description;
+                cfDataGrid.Refresh();
+            }
         }
     }
     
