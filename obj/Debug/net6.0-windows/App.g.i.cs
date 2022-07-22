@@ -73,7 +73,7 @@ namespace CofD_NPC {
             
             #line default
             #line hidden
-            System.Uri resourceLocater = new System.Uri("/CofD_NPC;V1.0.0.0;component/app.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/CofD_NPC;component/app.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\App.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

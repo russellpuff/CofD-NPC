@@ -1601,7 +1601,7 @@ namespace CofD_NPC {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/CofD_NPC;V1.0.0.0;component/sheetwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/CofD_NPC;component/sheetwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\SheetWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
