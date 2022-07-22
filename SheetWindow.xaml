@@ -1,0 +1,2816 @@
+﻿<Window x:Name="Sheet_Window2"
+        x:Class="CofD_NPC.SheetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="#FF303030"
+        TextElement.FontWeight="Medium"
+        mc:Ignorable="d"
+        Title="CofD NPC Manager"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize"
+        SizeToContent="WidthAndHeight"
+        Closing="Main_Window_Closing">
+    <Grid x:Name="swMajorGrid"
+          Height="770"
+          Width="1060">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250*" />
+            <ColumnDefinition Width="4" />
+            <ColumnDefinition Width="806*" />
+        </Grid.ColumnDefinitions>
+        <Rectangle x:Name="swVertLine3"
+                   Grid.Column="1"
+                   Height="760"
+                   Stroke="#FF7F7F7F"
+                   VerticalAlignment="Center"
+                   Width="1" />
+        <Grid x:Name="swGrid"
+              Width="250"
+              Height="770"
+              Background="#FF303030">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
+                <RowDefinition Height="32" />
+                <RowDefinition Height="588" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="10" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="24" />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition Width="115" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="swNPCSearchTextBox"
+                     md:HintAssist.Hint="Search NPC"
+                     FontSize="18"
+                     Foreground="White"
+                     Grid.Column="1"
+                     Grid.Row="1"
+                     Grid.ColumnSpan="4">
+            </TextBox>
+            <DataGrid x:Name="swDataGrid"
+                      Grid.Column="1"
+                      Grid.Row="2"
+                      Grid.ColumnSpan="4"
+                      Background="#FF424242"
+                      Foreground="White"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="false"
+                      IsReadOnly="True"
+                      CanUserDeleteRows="False"
+                      CanUserResizeRows="False">
+                <DataGrid.ContextMenu>
+                    <ContextMenu Name="swDataGridContextMenu"
+                                 Opened="DataGridContextMenu_Opened"
+                                 StaysOpen="true">
+                        <MenuItem Header="Open"
+                                  Click="DataGridMenuItem_Click" />
+                        <MenuItem Header="Delete"
+                                  Click="DataGridMenuItem_Click" />
+                        <MenuItem Header="Rename"
+                                  Click="DataGridMenuItem_Click" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn CanUserResize="False"
+                                        CanUserReorder="False"
+                                        Header="Name"
+                                        IsReadOnly="True"
+                                        SortDirection="Ascending"
+                                        Width="130"
+                                        Binding="{Binding Name}" />
+                    <DataGridTextColumn CanUserResize="False"
+                                        CanUserReorder="False"
+                                        Header="Description"
+                                        IsReadOnly="True"
+                                        Width="100"
+                                        Binding="{Binding Description}" />
+                    <DataGridTextColumn CanUserResize="False"
+                                        CanUserReorder="False"
+                                        Header="ID"
+                                        Visibility="Hidden"
+                                        Width="0"
+                                        Binding="{Binding ID}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <Rectangle x:Name="swRollSectionRectangle"
+                       Grid.Column="1"
+                       Grid.Row="4"
+                       Grid.ColumnSpan="4"
+                       Grid.RowSpan="4"
+                       Width="182"
+                       VerticalAlignment="Stretch"
+                       Stroke="#FF707070"
+                       MouseEnter="RollRectangle_MouseEnter"
+                       MouseLeave="RollRectangle_MouseLeave"
+                       Fill="#FF303030">
+            </Rectangle>
+            <Ellipse x:Name="swAddNPCElipse"
+                     Grid.Column="1"
+                     Grid.Row="2"
+                     Grid.ColumnSpan="4"
+                     VerticalAlignment="Bottom"
+                     Height="45"
+                     Stroke="#FF303030"
+                     Fill="#FF303030"
+                     HorizontalAlignment="Stretch"
+                     Width="50" />
+            <Rectangle x:Name="swAddNPCRectangle"
+                       Grid.Column="1"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="4"
+                       VerticalAlignment="Bottom"
+                       Height="20"
+                       Width="50"
+                       Stroke="#FF303030"
+                       Fill="#FF303030">
+            </Rectangle>
+            <Rectangle x:Name="swAddNPCRectangle2"
+                       Grid.Column="1"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="4"
+                       VerticalAlignment="Bottom"
+                       Height="10"
+                       Stroke="#FF303030"
+                       Fill="#FF303030">
+            </Rectangle>
+            <Button x:Name="swAddNPCButton"
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="4"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    VerticalAlignment="Bottom"
+                    Width="40"
+                    Height="40"
+                    Click="AddNPCButton_Click">
+                <md:PackIcon Kind="Plus"
+                             Width="32"
+                             Height="32" />
+            </Button>
+            <TextBlock x:Name="swQuickRollLabel"
+                       Text="Quick Roll"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontFamily="Elephant"
+                       FontSize="20"
+                       Foreground="White"
+                       Grid.Row="4"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="4"
+                       MouseEnter="RollRectangle_MouseEnter"
+                       MouseLeave="RollRectangle_MouseLeave" />
+            <mah:NumericUpDown x:Name="swRollModNumUpDown"
+                               FontSize="14"
+                               Grid.Column="2"
+                               Grid.ColumnSpan="2"
+                               Grid.Row="5"
+                               UpDownButtonsWidth="20"
+                               ParsingNumberStyle="Integer"
+                               Minimum="0"
+                               Maximum="100"
+                               TrackMouseWheelWhenMouseOver="True"
+                               Style="{StaticResource MaterialDesignNumericUpDown}"
+                               RenderTransformOrigin="0.5,0.5"
+                               Padding="0,0,0,0"
+                               Foreground="White"
+                               Value="0"
+                               TextAlignment="Right"
+                               HorizontalAlignment="Right"
+                               Width="85"
+                               MouseEnter="RollRectangle_MouseEnter"
+                               MouseLeave="RollRectangle_MouseLeave">
+            </mah:NumericUpDown>
+            <Label x:Name="swRoteLabel"
+                   Grid.Column="2"
+                   Grid.Row="6"
+                   FontSize="14"
+                   Content="Rote"
+                   Padding="2,5,0,0"
+                   HorizontalAlignment="Center" />
+            <ToggleButton x:Name="swRoteToggleButton"
+                          Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                          Grid.Column="3"
+                          Grid.Row="6"
+                          Padding="0,0,0,0"
+                          Width="40"
+                          MouseEnter="RollRectangle_MouseEnter"
+                          MouseLeave="RollRectangle_MouseLeave" />
+            <Button x:Name="swQuickRollButton"
+                    Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    Content="Roll"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="7"
+                    Margin="3"
+                    Height="24"
+                    FontFamily="Elephant"
+                    Width="85"
+                    HorizontalAlignment="Right"
+                    MouseEnter="RollRectangle_MouseEnter"
+                    MouseLeave="RollRectangle_MouseLeave" />
+            <RadioButton x:Name="sw10AgainRadio"
+                         Grid.Column="4"
+                         Grid.Row="5"
+                         Content="10 Again"
+                         FontSize="14"
+                         Foreground="White"
+                         Padding="4,0,0,2"
+                         MouseEnter="RollRectangle_MouseEnter"
+                         MouseLeave="RollRectangle_MouseLeave">
+            </RadioButton>
+            <RadioButton x:Name="sw9AgainRadio"
+                         Grid.Column="4"
+                         Grid.Row="6"
+                         Content="9 Again"
+                         FontSize="14"
+                         Foreground="White"
+                         Padding="4,0,0,2"
+                         MouseEnter="RollRectangle_MouseEnter"
+                         MouseLeave="RollRectangle_MouseLeave">
+            </RadioButton>
+            <RadioButton x:Name="sw8AgainRadio"
+                         Grid.Column="4"
+                         Grid.Row="7"
+                         Content="8 Again"
+                         FontSize="14"
+                         Foreground="White"
+                         Padding="4,0,0,2"
+                         MouseEnter="RollRectangle_MouseEnter"
+                         MouseLeave="RollRectangle_MouseLeave">
+            </RadioButton>
+        </Grid>
+        <Grid x:Name="swMainGrid"
+              Height="770"
+              Width="806"
+              Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="3" />
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="3" />
+                <ColumnDefinition Width="260" />
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="swLeftGrid"
+                  Margin="10"
+                  Grid.Column="0"
+                  ForceCursor="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="32*" />
+                    <RowDefinition Height="28*" />
+                    <RowDefinition Height="28*" />
+                    <RowDefinition Height="32*" />
+                    <RowDefinition Height="28*" />
+                    <RowDefinition Height="28*" />
+                    <RowDefinition Height="32*" />
+                    <RowDefinition Height="28*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="25*" />
+                    <RowDefinition Height="32*" />
+                    <RowDefinition Height="358*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80*" />
+                    <ColumnDefinition Width="200*" />
+                </Grid.ColumnDefinitions>
+                <Label x:Name="swNameLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Name:"
+                       Grid.Column="0"
+                       Grid.Row="0"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swAgeLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Age:"
+                       Grid.Column="0"
+                       Grid.Row="1"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swVirtueLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Virtue:"
+                       Grid.Column="0"
+                       Grid.Row="2"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swViceLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Vice:"
+                       Grid.Column="0"
+                       Grid.Row="3"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swConceptLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Concept:"
+                       Grid.Column="0"
+                       Grid.Row="4"
+                       Padding="0,0,0,0" />
+                <TextBox x:Name="swNameTextBox"
+                         FontSize="14"
+                         Grid.Column="1"
+                         Grid.Row="0"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <mah:NumericUpDown x:Name="swAgeNumUpDown"
+                                   FontSize="14"
+                                   Grid.Column="1"
+                                   Grid.Row="1"
+                                   UpDownButtonsWidth="20"
+                                   ParsingNumberStyle="Integer"
+                                   Minimum="1"
+                                   Maximum="202100"
+                                   TrackMouseWheelWhenMouseOver="True"
+                                   Style="{StaticResource MaterialDesignNumericUpDown}"
+                                   RenderTransformOrigin="0.5,0.5"
+                                   Padding="0,0,0,0"
+                                   Foreground="White"
+                                   TextAlignment="Left">
+                </mah:NumericUpDown>
+                <ComboBox x:Name="swVirtueComboBox"
+                          FontSize="14"
+                          Grid.Column="1"
+                          Grid.Row="2"
+                          Padding="0,0,0,0"
+                          IsEditable="True">
+                    <ComboBoxItem Content="Ambitious" />
+                    <ComboBoxItem Content="Courageous" />
+                    <ComboBoxItem Content="Generous" />
+                    <ComboBoxItem Content="Honest" />
+                    <ComboBoxItem Content="Hopeful" />
+                    <ComboBoxItem Content="Humble" />
+                    <ComboBoxItem Content="Just" />
+                    <ComboBoxItem Content="Loving" />
+                    <ComboBoxItem Content="Loyal" />
+                    <ComboBoxItem Content="Patient" />
+                    <ComboBoxItem Content="Peaceful" />
+                    <ComboBoxItem Content="Righteous" />
+                    <ComboBoxItem Content="Trustworthy" />
+                </ComboBox>
+                <ComboBox x:Name="swViceComboBox"
+                          FontSize="14"
+                          Grid.Column="1"
+                          Grid.Row="3"
+                          Padding="0,0,0,0"
+                          IsEditable="True">
+                    <ComboBoxItem Content="Ambitious" />
+                    <ComboBoxItem Content="Arrogant" />
+                    <ComboBoxItem Content="Corrupt" />
+                    <ComboBoxItem Content="Cowardly" />
+                    <ComboBoxItem Content="Cruel" />
+                    <ComboBoxItem Content="Deceitful" />
+                    <ComboBoxItem Content="Greedy" />
+                    <ComboBoxItem Content="Hasty" />
+                    <ComboBoxItem Content="Hateful" />
+                    <ComboBoxItem Content="Pessimistic" />
+                    <ComboBoxItem Content="Treacherous" />
+                    <ComboBoxItem Content="Untrustworthy" />
+                    <ComboBoxItem Content="Violent" />
+                </ComboBox>
+                <TextBox x:Name="swConceptTextBox"
+                         FontSize="14"
+                         Grid.Column="1"
+                         Grid.Row="4"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <Label x:Name="swHealthLabel"
+                       Grid.Column="0"
+                       Grid.Row="5"
+                       Grid.ColumnSpan="2"
+                       Content="Health"
+                       FontSize="20"
+                       Padding="0,1,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <md:RatingBar x:Name="swHealthDotsTop"
+                              Max="0"
+                              Grid.Row="6"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Left"
+                              Padding="20,0,0,0"
+                              ValueChanged="Dots_ValueChanged">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swHealthDotsBottom"
+                              Max="10"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Row="6"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Left"
+                              Padding="20,0,0,0"
+                              Foreground="#FF707070">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <Grid x:Name="swHealthStateGrid"
+                      Grid.Column="0"
+                      Grid.Row="7"
+                      Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    <Image x:Name="swHealthState1"
+                           Grid.Column="1"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState2"
+                           Grid.Column="2"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState3"
+                           Grid.Column="3"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState4"
+                           Grid.Column="4"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState5"
+                           Grid.Column="5"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState6"
+                           Grid.Column="6"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState7"
+                           Grid.Column="7"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState8"
+                           Grid.Column="8"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState9"
+                           Grid.Column="9"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                    <Image x:Name="swHealthState10"
+                           Grid.Column="10"
+                           MouseDown="HealthState_Click">
+                    </Image>
+                </Grid>
+                <Label x:Name="swWillpowerLabel"
+                       Grid.Column="0"
+                       Grid.Row="8"
+                       Grid.ColumnSpan="2"
+                       Content="Willpower"
+                       FontSize="20"
+                       Padding="0,1,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <md:RatingBar x:Name="swWillpowerDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Row="9"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Left"
+                              Padding="20,0,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swWillpowerDotsBottom"
+                              Foreground="#FF707070"
+                              Max="10"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Row="9"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Left"
+                              Padding="20,0,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <Grid x:Name="swWillpowerValueGrid"
+                      Grid.Column="0"
+                      Grid.Row="10"
+                      Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="24" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox x:Name="swWillpowerCheck1"
+                              Grid.Column="1"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck2"
+                              Grid.Column="2"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck3"
+                              Grid.Column="3"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck4"
+                              Grid.Column="4"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck5"
+                              Grid.Column="5"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck6"
+                              Grid.Column="6"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck7"
+                              Grid.Column="7"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck8"
+                              Grid.Column="8"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck9"
+                              Grid.Column="9"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                    <CheckBox x:Name="swWillpowerCheck10"
+                              Grid.Column="10"
+                              md:CheckBoxAssist.CheckBoxSize="24">
+                    </CheckBox>
+                </Grid>
+                <Label x:Name="swIntegrityLabel"
+                       Grid.Column="0"
+                       Grid.Row="11"
+                       Grid.ColumnSpan="2"
+                       Content="Integrity"
+                       FontSize="20"
+                       Padding="0,1,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <md:RatingBar x:Name="swIntegrityDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Row="12"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Left"
+                              Padding="20,0,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swIntegrityDotsBottom"
+                              Foreground="#FF707070"
+                              Max="10"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Row="12"
+                              Grid.ColumnSpan="2"
+                              HorizontalAlignment="Left"
+                              Padding="20,0,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <Label x:Name="swSizeLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Size:"
+                       Grid.Column="0"
+                       Grid.Row="13"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swSpeedLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Speed:"
+                       Grid.Column="0"
+                       Grid.Row="14"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swDefenseLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Defense:"
+                       Grid.Column="0"
+                       Grid.Row="15"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swArmorLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Armor:"
+                       Grid.Column="0"
+                       Grid.Row="16"
+                       Padding="0,0,0,0" />
+                <Label x:Name="swInitiativeLabel"
+                       FontSize="14"
+                       Foreground="White"
+                       Content="Initiative:"
+                       Grid.Column="0"
+                       Grid.Row="17"
+                       Padding="0,0,0,0" />
+                <mah:NumericUpDown x:Name="swSizeNumUpDown"
+                                   FontSize="14"
+                                   Grid.Column="1"
+                                   Grid.Row="13"
+                                   UpDownButtonsWidth="20"
+                                   ParsingNumberStyle="Integer"
+                                   Minimum="1"
+                                   Maximum="100"
+                                   TrackMouseWheelWhenMouseOver="True"
+                                   Style="{StaticResource MaterialDesignNumericUpDown}"
+                                   RenderTransformOrigin="0.5,0.5"
+                                   Padding="0,0,0,0"
+                                   Foreground="White"
+                                   TextAlignment="Left">
+                </mah:NumericUpDown>
+                <mah:NumericUpDown x:Name="swSpeedNumUpDown"
+                                   FontSize="14"
+                                   Grid.Column="1"
+                                   Grid.Row="14"
+                                   UpDownButtonsWidth="20"
+                                   ParsingNumberStyle="Integer"
+                                   Minimum="0"
+                                   Maximum="50"
+                                   TrackMouseWheelWhenMouseOver="True"
+                                   Style="{StaticResource MaterialDesignNumericUpDown}"
+                                   RenderTransformOrigin="0.5,0.5"
+                                   Padding="0,0,0,0"
+                                   Foreground="White"
+                                   TextAlignment="Left">
+                </mah:NumericUpDown>
+                <mah:NumericUpDown x:Name="swDefenseNumUpDown"
+                                   FontSize="14"
+                                   Grid.Column="1"
+                                   Grid.Row="15"
+                                   UpDownButtonsWidth="20"
+                                   ParsingNumberStyle="Integer"
+                                   Minimum="-20"
+                                   Maximum="20"
+                                   TrackMouseWheelWhenMouseOver="True"
+                                   Style="{StaticResource MaterialDesignNumericUpDown}"
+                                   RenderTransformOrigin="0.5,0.5"
+                                   Padding="0,0,0,0"
+                                   Foreground="White"
+                                   TextAlignment="Left">
+                </mah:NumericUpDown>
+                <TextBox x:Name="swArmorTextBox"
+                         FontSize="14"
+                         Grid.Column="1"
+                         Grid.Row="16"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <mah:NumericUpDown x:Name="swInitaitveNumUpDown"
+                                   FontSize="14"
+                                   Grid.Column="1"
+                                   Grid.Row="17"
+                                   UpDownButtonsWidth="20"
+                                   ParsingNumberStyle="Integer"
+                                   Minimum="-20"
+                                   Maximum="20"
+                                   TrackMouseWheelWhenMouseOver="True"
+                                   Style="{StaticResource MaterialDesignNumericUpDown}"
+                                   RenderTransformOrigin="0.5,0.5"
+                                   Padding="0,0,0,0"
+                                   Foreground="White"
+                                   TextAlignment="Left">
+                </mah:NumericUpDown>
+                <Label x:Name="swDescriptionLabel"
+                       Grid.Column="0"
+                       Grid.Row="18"
+                       Grid.ColumnSpan="2"
+                       Content="Description"
+                       FontSize="20"
+                       Padding="0,1,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <TextBox x:Name="swDescriptionTextBox"
+                         Grid.Column="0"
+                         Grid.Row="19"
+                         Grid.ColumnSpan="2"
+                         FontSize="14"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         TextWrapping="Wrap"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+            </Grid>
+            <Rectangle x:Name="swVertLine1"
+                       Grid.Column="1"
+                       Height="760"
+                       Stroke="#FF7F7F7F"
+                       VerticalAlignment="Center"
+                       Width="1" />
+            <Rectangle x:Name="swVertLine2"
+                       Grid.Column="3"
+                       Height="760"
+                       Stroke="#FF7F7F7F"
+                       VerticalAlignment="Center"
+                       Width="1" />
+            <Grid x:Name="swMiddleGrid"
+                  Grid.Column="2"
+                  Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="24*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="120" />
+                </Grid.ColumnDefinitions>
+                <Label x:Name="swAttributesLabel"
+                       Grid.Column="0"
+                       Grid.Row="0"
+                       Grid.ColumnSpan="2"
+                       Content="Attributes"
+                       FontSize="20"
+                       Padding="0,0,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <Label x:Name="swIntelligenceLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Intelligence_______________"
+                       Grid.Column="0"
+                       Grid.Row="1"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swWitsLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Wits_________________________"
+                       Grid.Column="0"
+                       Grid.Row="2"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swResolveLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Resolve_______________"
+                       Grid.Column="0"
+                       Grid.Row="3"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swStrengthLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Strength_______________"
+                       Grid.Column="0"
+                       Grid.Row="4"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swDexterityLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Dexterity_______________"
+                       Grid.Column="0"
+                       Grid.Row="5"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swStaminaLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Stamina_______________"
+                       Grid.Column="0"
+                       Grid.Row="6"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swPresenceLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Presence_______________"
+                       Grid.Column="0"
+                       Grid.Row="7"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swManipulationLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Manipulation_______________"
+                       Grid.Column="0"
+                       Grid.Row="8"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swComposureLabel"
+                       FontSize="16"
+                       Foreground="White"
+                       Content="Composure_______________"
+                       Grid.Column="0"
+                       Grid.Row="9"
+                       Padding="0,0,0,0"
+                       VerticalAlignment="Bottom" />
+                <Label x:Name="swSkillsLabel"
+                       Grid.Column="0"
+                       Grid.Row="10"
+                       Grid.ColumnSpan="2"
+                       Content="Skills"
+                       FontSize="20"
+                       Padding="0,7,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <ComboBox x:Name="swSkillComboBox1"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="11"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox2"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="12"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox3"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="13"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox4"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="14"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox5"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="15"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox6"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="16"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox7"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="17"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox8"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="18"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox9"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="19"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox10"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="20"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox11"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="21"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox12"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="22"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox13"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="23"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox14"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="24"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox15"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="25"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <ComboBox x:Name="swSkillComboBox16"
+                          FontSize="14"
+                          Grid.Column="0"
+                          Grid.Row="26"
+                          Padding="0,0,0,0"
+                          SelectionChanged="SkillComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Academics" />
+                    <ComboBoxItem Content="Computer" />
+                    <ComboBoxItem Content="Crafts" />
+                    <ComboBoxItem Content="Investigation" />
+                    <ComboBoxItem Content="Medicine" />
+                    <ComboBoxItem Content="Occult" />
+                    <ComboBoxItem Content="Politics" />
+                    <ComboBoxItem Content="Science" />
+                    <Separator />
+                    <ComboBoxItem Content="Athletics" />
+                    <ComboBoxItem Content="Brawl" />
+                    <ComboBoxItem Content="Drive" />
+                    <ComboBoxItem Content="Firearms" />
+                    <ComboBoxItem Content="Larceny" />
+                    <ComboBoxItem Content="Stealth" />
+                    <ComboBoxItem Content="Survival" />
+                    <ComboBoxItem Content="Weaponry" />
+                    <Separator />
+                    <ComboBoxItem Content="Animal Ken" />
+                    <ComboBoxItem Content="Empathy" />
+                    <ComboBoxItem Content="Expression" />
+                    <ComboBoxItem Content="Intimidation" />
+                    <ComboBoxItem Content="Persuasion" />
+                    <ComboBoxItem Content="Socialize" />
+                    <ComboBoxItem Content="Streetwise" />
+                    <ComboBoxItem Content="Subterfuge" />
+                </ComboBox>
+                <md:RatingBar x:Name="swIntelligenceDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="1"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swIntelligenceDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="1"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swWitsDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="2"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swWitsDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="2"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swResolveDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="3"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swResolveDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="3"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swStrengthDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="4"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swStrengthDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="4"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swDexterityDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="5"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swDexterityDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="5"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swStaminaDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="6"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swStaminaDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="6"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swPresenceDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="7"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swPresenceDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="7"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swManipulationDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="8"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swManipulationDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="8"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swComposureDotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="9"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swComposureDotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="9"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill1DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="11"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill1DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="11"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill2DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="12"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill2DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="12"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill3DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="13"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill3DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="13"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill4DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="14"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill4DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="14"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill5DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="15"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill5DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="15"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill6DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="16"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill6DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="16"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill7DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="17"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill7DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="17"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill8DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="18"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill8DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="18"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill9DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="19"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill9DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="19"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill10DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="20"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill10DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="20"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill11DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="21"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill11DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="21"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill12DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="22"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill12DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="22"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill13DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="23"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill13DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="23"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill14DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="24"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill14DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="24"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill15DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="25"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill15DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="25"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill16DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="26"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swSkill16DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="26"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+            </Grid>
+            <Grid x:Name="swRightGrid"
+                  Grid.Column="4"
+                  Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120*" />
+                    <ColumnDefinition Width="120*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="28" />
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="100*" />
+                    <RowDefinition Height="32" />
+                    <RowDefinition Height="100*" />
+                    <RowDefinition Height="40" />
+                </Grid.RowDefinitions>
+                <Label x:Name="swMeritsLabel"
+                       Grid.Column="0"
+                       Grid.Row="0"
+                       Grid.ColumnSpan="2"
+                       Content="Attributes"
+                       FontSize="20"
+                       Padding="0,1,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <TextBox x:Name="swMeritTextBox1"
+                         Grid.Column="0"
+                         Grid.Row="1"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox2"
+                         Grid.Column="0"
+                         Grid.Row="2"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox3"
+                         Grid.Column="0"
+                         Grid.Row="3"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox4"
+                         Grid.Column="0"
+                         Grid.Row="4"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox5"
+                         Grid.Column="0"
+                         Grid.Row="5"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox6"
+                         Grid.Column="0"
+                         Grid.Row="6"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox7"
+                         Grid.Column="0"
+                         Grid.Row="7"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox8"
+                         Grid.Column="0"
+                         Grid.Row="8"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox9"
+                         Grid.Column="0"
+                         Grid.Row="9"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <TextBox x:Name="swMeritTextBox10"
+                         Grid.Column="0"
+                         Grid.Row="10"
+                         FontSize="14"
+                         Padding="0,0,0,0">
+                </TextBox>
+                <Label x:Name="swConditionsLabel"
+                       Grid.Column="0"
+                       Grid.Row="11"
+                       Grid.ColumnSpan="2"
+                       Content="Conditions"
+                       FontSize="20"
+                       Padding="0,1,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <TextBox x:Name="swConditionsTextBox"
+                         Grid.Column="0"
+                         Grid.Row="12"
+                         Grid.ColumnSpan="2"
+                         FontSize="14"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         TextWrapping="Wrap"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                <Label x:Name="swAspirationsLabel"
+                       Grid.Column="0"
+                       Grid.Row="13"
+                       Grid.ColumnSpan="2"
+                       Content="Aspirations"
+                       FontSize="20"
+                       Padding="0,1,0,0"
+                       FontFamily="Elephant"
+                       HorizontalAlignment="Center">
+                </Label>
+                <TextBox x:Name="swAspirationsTextBox"
+                         Grid.Column="0"
+                         Grid.Row="14"
+                         Grid.ColumnSpan="2"
+                         FontSize="14"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         TextWrapping="Wrap"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}" />
+                <md:RatingBar x:Name="swMerit1DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="1"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit1DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="1"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit2DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="2"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit2DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="2"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit3DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="3"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit3DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="3"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit4DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="4"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit4DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="4"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit5DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="5"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit5DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="5"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit6DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="6"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit6DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="6"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit7DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="7"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit7DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="7"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit8DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="8"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit8DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="8"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit9DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="9"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit9DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="9"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit10DotsTop"
+                              Max="0"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="10"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxMarked"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <md:RatingBar x:Name="swMerit10DotsBottom"
+                              Foreground="#FF707070"
+                              Max="5"
+                              ValueChanged="Dots_ValueChanged"
+                              Grid.Column="1"
+                              Grid.Row="10"
+                              HorizontalAlignment="Left"
+                              Padding="0,3,0,0">
+                    <md:RatingBar.ValueItemTemplate>
+                        <DataTemplate DataType="system:Int32">
+                            <Grid>
+                                <md:PackIcon Kind="RadioboxBlank"
+                                             Height="24"
+                                             Width="24" />
+                            </Grid>
+                        </DataTemplate>
+                    </md:RatingBar.ValueItemTemplate>
+                </md:RatingBar>
+                <Button x:Name="swRollButton"
+                        Style="{StaticResource MaterialDesignPaperButton}"
+                        Content="Roll Dice"
+                        Grid.Column="0"
+                        Grid.Row="15"
+                        Margin="3"
+                        FontFamily="Elephant" />
+                <Button x:Name="swSaveButton"
+                        Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                        Content="Save"
+                        Grid.Column="1"
+                        Grid.Row="15"
+                        Margin="3"
+                        FontFamily="Elephant" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
