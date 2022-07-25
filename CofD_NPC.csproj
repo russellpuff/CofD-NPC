@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>CofD_NPC2</RootNamespace>
+    <RootNamespace>CofD_NPC</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>False</UseWindowsForms>
@@ -11,12 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\aggrivated.png" />
-    <None Remove="Resources\aggrivated_h.png" />
-    <None Remove="Resources\aggrivated_yellow.png" />
+    <None Remove="Resources\aggravated.png" />
+    <None Remove="Resources\aggravated_h.png" />
+    <None Remove="Resources\aggravated_yellow.png" />
     <None Remove="Resources\bashing.png" />
     <None Remove="Resources\bashing_h.png" />
     <None Remove="Resources\bashing_yellow.png" />
+    <None Remove="Resources\blank.png" />
     <None Remove="Resources\healthy.png" />
     <None Remove="Resources\healthy_h.png" />
     <None Remove="Resources\healthy_transparent.png" />
@@ -36,12 +37,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\aggrivated.png" />
-    <Resource Include="Resources\aggrivated_h.png" />
-    <Resource Include="Resources\aggrivated_yellow.png" />
+    <Resource Include="Resources\aggravated.png" />
+    <Resource Include="Resources\aggravated_h.png" />
+    <Resource Include="Resources\aggravated_yellow.png" />
     <Resource Include="Resources\bashing.png" />
     <Resource Include="Resources\bashing_h.png" />
     <Resource Include="Resources\bashing_yellow.png" />
+    <Resource Include="Resources\blank.png" />
     <Resource Include="Resources\healthy.png" />
     <Resource Include="Resources\healthy_h.png" />
     <Resource Include="Resources\healthy_transparent.png" />

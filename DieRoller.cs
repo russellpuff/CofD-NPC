@@ -14,7 +14,7 @@ namespace CofD_NPC
             rote = r;
             rollAgain = (Again)RA;
             chance = (dice <= 0);
-            if (chance) { ++dice; }
+            if (chance) { dice = 1; }
         }
         private enum Again
         {

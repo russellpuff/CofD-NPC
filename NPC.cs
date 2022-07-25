@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
 namespace CofD_NPC
@@ -8,7 +12,7 @@ namespace CofD_NPC
     public class NPC
     {
         [XmlAttribute("ID")]
-        public long ID { get; set; }
+        public string ID { get; set; }
 
         [XmlAttribute("Name")]
         public string Name { get; set; }
@@ -105,7 +109,7 @@ namespace CofD_NPC
 
         public NPC()
         {
-            ID = DateTime.Now.Ticks;
+            ID = Guid.NewGuid().ToString();
             Name = "";
             Age = 0;
             Virtue = "";
@@ -136,15 +140,56 @@ namespace CofD_NPC
             Merits = new string[10] { "", "", "", "", "", "", "", "", "", "" };
             MeritDots = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             Conditions = "";
-            Aspirations = ""; 
+            Aspirations = "";
         }
     
     }
 
-    public class DataItem
+    public abstract class PropertyChangedBase : INotifyPropertyChanged
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ID { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value))
+                return false;
+
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+    }
+
+    public class DataItem : PropertyChangedBase
+    {
+        private string? _name;
+        public string? Name
+        {
+            get => _name;
+            set => SetField(ref _name, value);
+        }
+
+        private string? _description;
+        public string? Description
+        {
+            get => _description;
+            set => SetField(ref _description, value);
+        }
+
+        private string? _id;
+        public string? ID
+        {
+            get => _id;
+            set => SetField(ref _id, value);
+        }
+
+        private bool? _visible;
+        public bool? Visible
+        {
+            get => _visible;
+            set => SetField(ref _visible, value);
+        }
     }
 }
