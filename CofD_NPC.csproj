@@ -38,17 +38,13 @@
 
   <ItemGroup>
     <Resource Include="Resources\aggravated.png" />
-    <Resource Include="Resources\aggravated_h.png" />
     <Resource Include="Resources\aggravated_yellow.png" />
     <Resource Include="Resources\bashing.png" />
-    <Resource Include="Resources\bashing_h.png" />
     <Resource Include="Resources\bashing_yellow.png" />
     <Resource Include="Resources\blank.png" />
     <Resource Include="Resources\healthy.png" />
-    <Resource Include="Resources\healthy_h.png" />
     <Resource Include="Resources\healthy_transparent.png" />
     <Resource Include="Resources\lethal.png" />
-    <Resource Include="Resources\lethal_h.png" />
     <Resource Include="Resources\lethal_yellow.png" />
   </ItemGroup>
 

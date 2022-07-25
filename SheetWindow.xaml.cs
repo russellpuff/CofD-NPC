@@ -128,6 +128,7 @@ namespace CofD_NPC
 
         private bool SaveNPC()
         {
+            deactivateDangerousEvents = true;
             try
             {
                 SNPC.Name = swNameTextBox.Text;
@@ -181,11 +182,20 @@ namespace CofD_NPC
                     }
                 }
 
-                if (swPortraitImage.Source != blank && !portraitPath.Contains("/NPC/"))
+                try
                 {
-                    string[] oldpath = portraitPath.Split('.');
-                    string newpath = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + SNPC.ID.ToString() + ".png";
-                    File.Copy(portraitPath, newpath, true);
+                    if (swPortraitImage.Source != blank && !portraitPath.Contains("/NPC/"))
+                    {
+                        string[] oldpath = portraitPath.Split('.');
+                        string newpath = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + SNPC.ID + ".png";
+                        File.Copy(portraitPath, newpath, true);
+                    }
+                } catch (IOException)
+                {
+                    string[] missingFile = portraitPath.Split('\\');
+                    string m = "Error: cannot find " + missingFile[^1];
+                    m += "\nSkipping portrait save process. Nothing else should be affected.";
+                    MessageBox.Show(m, "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 CompressFile();
@@ -213,6 +223,7 @@ namespace CofD_NPC
                 MessageBox.Show(m, "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+            deactivateDangerousEvents = false;
             return true;
         }
 
