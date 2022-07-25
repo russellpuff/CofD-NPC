@@ -211,9 +211,9 @@ namespace CofD_NPC
                     int idx = dataGridItems.FindIndex(di => di.ID == SNPC.ID);
                     dataGridItems[idx].Name = SNPC.Name;
                     dataGridItems[idx].Description = SNPC.Description;
-                    swDataGrid.Items.Refresh();
                 }
                 swNPCSearchTextBox.Text = "";
+                swDataGrid.Items.Refresh();
             }
             catch (Exception ex)
             {
