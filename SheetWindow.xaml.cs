@@ -28,8 +28,8 @@ namespace CofD_NPC
         const string alpha = "abcdefghijklmnopqrstuvwxyz";
         string portraitPath = "none";
         readonly Dictionary<string, int> skillboxes = new();
-        List<DataItem> dataGridItems = new();
-        List<NPC> NPCs = new();
+        readonly List<DataItem> dataGridItems = new();
+        readonly List<NPC> NPCs = new();
         NPC SNPC;
         bool unsaved = false, deactivateDangerousEvents = false; // On form load and clear, some events fuck shit sideways. 
 
@@ -40,9 +40,10 @@ namespace CofD_NPC
             InitializeImages();
             LoadSBDictionary();
             LoadNPCList();
+            ClearForm();
             sw10AgainRadio.IsChecked = true;
-
             SNPC = new();
+            unsaved = false;
         }
         
         private void InitializeImages()
@@ -107,16 +108,6 @@ namespace CofD_NPC
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         { SaveNPC(); }
 
-        private void SaveToggle_Checked(object sender, RoutedEventArgs e)
-        {
-            if (deactivateDangerousEvents) { return; }
-            if (!SaveNPC())
-            {
-                ToggleButton tb = (ToggleButton)sender;
-                tb.IsChecked = false;
-            }
-        }
-
         private bool PromptToSaveChanges()
         { // True means the user handled their decision and wants to proceed. False means they canclled.
             const string m = "You have unsaved changes. Would you like to save them first?";
@@ -144,15 +135,15 @@ namespace CofD_NPC
                 SNPC.Armor = swArmorTextBox.Text;
                 SNPC.Initiative = swInitiativeNumUpDown.Value != null ? (int)swInitiativeNumUpDown.Value : 0;
                 SNPC.Description = swDescriptionTextBox.Text;
-                SNPC.Intelligence = swIntelligenceDotsTop.Value;
-                SNPC.Wits = swWitsDotsTop.Value;
-                SNPC.Resolve = swResolveDotsTop.Value;
-                SNPC.Strength = swStrengthDotsTop.Value;
-                SNPC.Dexterity = swDexterityDotsTop.Value;
-                SNPC.Stamina = swStaminaDotsTop.Value;
-                SNPC.Presence = swPresenceDotsTop.Value;
-                SNPC.Manipulation = swManipulationDotsTop.Value;
-                SNPC.Composure = swComposureDotsTop.Value;
+                SNPC.Intelligence = swAttributeIntelligenceDotsTop.Value;
+                SNPC.Wits = swAttributeWitsDotsTop.Value;
+                SNPC.Resolve = swAttributeResolveDotsTop.Value;
+                SNPC.Strength = swAttributeStrengthDotsTop.Value;
+                SNPC.Dexterity = swAttributeDexterityDotsTop.Value;
+                SNPC.Stamina = swAttributeStaminaDotsTop.Value;
+                SNPC.Presence = swAttributePresenceDotsTop.Value;
+                SNPC.Manipulation = swAttributeManipulationDotsTop.Value;
+                SNPC.Composure = swAttributeComposureDotsTop.Value;
                 SNPC.Conditions = swConditionsTextBox.Text;
                 SNPC.Aspirations = swAspirationsTextBox.Text;
                 SNPC.WillpowerCurrent = 0;
@@ -408,7 +399,6 @@ namespace CofD_NPC
         private void AddNPCButton_Click(object sender, RoutedEventArgs e)
         {
             ClearForm();
-            SNPC = new();
         }
 
         private void ClearForm()
@@ -423,10 +413,11 @@ namespace CofD_NPC
             {
                 if (x is Grid g) { ClearExternal(g); }
             }
+            SNPC = new();
             deactivateDangerousEvents = false;
         }
 
-        private void ClearExternal(Grid g)
+        private static void ClearExternal(Grid g)
         {
             foreach (var c in g.Children)
             {
@@ -444,8 +435,8 @@ namespace CofD_NPC
                 {
                     if (rb.Name.Contains("Top"))
                     {
-                        rb.Value = 0;
-                        rb.Max = 0;
+                        rb.Max = rb.Name.Contains("Attribute") ? 1 : 0;
+                        rb.Value = rb.Name.Contains("Attribute") ? 1 : 0;
                     }
                     continue;
                 }
@@ -471,9 +462,7 @@ namespace CofD_NPC
                 for (int i = 0; i < count; i++)
                 {
                     // Retrieve child visual at specified index value.
-                    var child = VisualTreeHelper.GetChild(parent, i) as Visual;
-
-                    if (child != null)
+                    if (VisualTreeHelper.GetChild(parent, i) is Visual child)
                     {
                         yield return child;
 
@@ -562,8 +551,8 @@ namespace CofD_NPC
                     swDataGrid.Dispatcher.BeginInvoke(
                        new Action(() =>
                        {
-                           RoutedEventArgs args = new MouseButtonEventArgs(e.MouseDevice, 0, e.ChangedButton);
-                           args.RoutedEvent = UIElement.MouseDownEvent;
+                           RoutedEventArgs args = new MouseButtonEventArgs(e.MouseDevice, 0, e.ChangedButton)
+                           { RoutedEvent = UIElement.MouseDownEvent };
                            (e.OriginalSource as UIElement).RaiseEvent(args);
                        }),
                        System.Windows.Threading.DispatcherPriority.Input);
@@ -605,24 +594,24 @@ namespace CofD_NPC
             swArmorTextBox.Text = SNPC.Armor;
             swInitiativeNumUpDown.Value = SNPC.Initiative;
             swDescriptionTextBox.Text = SNPC.Description;
-            swIntelligenceDotsTop.Max = SNPC.Intelligence;
-            swIntelligenceDotsTop.Value = SNPC.Intelligence;
-            swWitsDotsTop.Max = SNPC.Wits;
-            swWitsDotsTop.Value = SNPC.Wits;
-            swResolveDotsTop.Max = SNPC.Resolve;
-            swResolveDotsTop.Value = SNPC.Resolve;
-            swStrengthDotsTop.Max = SNPC.Strength;
-            swStrengthDotsTop.Value = SNPC.Strength;
-            swDexterityDotsTop.Max = SNPC.Dexterity;
-            swDexterityDotsTop.Value = SNPC.Dexterity;
-            swStaminaDotsTop.Max = SNPC.Stamina;
-            swStaminaDotsTop.Value = SNPC.Stamina;
-            swPresenceDotsTop.Max = SNPC.Presence;
-            swPresenceDotsTop.Value = SNPC.Presence;
-            swManipulationDotsTop.Max = SNPC.Manipulation;
-            swManipulationDotsTop.Value = SNPC.Manipulation;
-            swComposureDotsTop.Max = SNPC.Composure;
-            swComposureDotsTop.Value = SNPC.Composure;
+            swAttributeIntelligenceDotsTop.Max = SNPC.Intelligence;
+            swAttributeIntelligenceDotsTop.Value = SNPC.Intelligence;
+            swAttributeWitsDotsTop.Max = SNPC.Wits;
+            swAttributeWitsDotsTop.Value = SNPC.Wits;
+            swAttributeResolveDotsTop.Max = SNPC.Resolve;
+            swAttributeResolveDotsTop.Value = SNPC.Resolve;
+            swAttributeStrengthDotsTop.Max = SNPC.Strength;
+            swAttributeStrengthDotsTop.Value = SNPC.Strength;
+            swAttributeDexterityDotsTop.Max = SNPC.Dexterity;
+            swAttributeDexterityDotsTop.Value = SNPC.Dexterity;
+            swAttributeStaminaDotsTop.Max = SNPC.Stamina;
+            swAttributeStaminaDotsTop.Value = SNPC.Stamina;
+            swAttributePresenceDotsTop.Max = SNPC.Presence;
+            swAttributePresenceDotsTop.Value = SNPC.Presence;
+            swAttributeManipulationDotsTop.Max = SNPC.Manipulation;
+            swAttributeManipulationDotsTop.Value = SNPC.Manipulation;
+            swAttributeComposureDotsTop.Max = SNPC.Composure;
+            swAttributeComposureDotsTop.Value = SNPC.Composure;
             swConditionsTextBox.Text = SNPC.Conditions;
             swAspirationsTextBox.Text = SNPC.Aspirations;
             for (int i = 0; i < 16; ++i)
@@ -705,8 +694,7 @@ namespace CofD_NPC
         private BitmapImage LoadImage(string path)
         {
             portraitPath = path;
-            BitmapImage? myRetVal = null;
-            BitmapImage image = new BitmapImage();
+            BitmapImage image = new();
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 image.BeginInit();
@@ -714,7 +702,7 @@ namespace CofD_NPC
                 image.StreamSource = stream;
                 image.EndInit();
             }
-            myRetVal = image;
+            BitmapImage? myRetVal = image;
             return myRetVal;
         }
 
@@ -789,35 +777,27 @@ namespace CofD_NPC
                     other.Max = 9;
                     other.Max = 10;
                     other.Value = 0;
-                    rb.Max = 0;
+                    rb.Max = rb.Name.Contains("Attribute") ? 1 : 0;
+                    rb.Value = rb.Name.Contains("Attribute") ? 1 : 0;
                 }
                 else
                 {
                     rb.Max = 9;
                     rb.Max = 10;
                     rb.Value = 0;
-                    other.Max = 0;
-                    other.Value = 0;
+                    other.Max = other.Name.Contains("Attribute") ? 1 : 0;
+                    other.Value = other.Name.Contains("Attribute") ? 1 : 0;
                 }
                 deactivateDangerousEvents = false;
 
             }
-            if (cm.PlacementTarget is NumericUpDown nd)
-            {
-
-            }
-        }
-
-        private void RollThis_OnClick(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void RollInit_OnClick(object sender, RoutedEventArgs e)
         {
             Random r = new();
             int d = r.Next(1, 10);
-            int i = swDexterityDotsTop.Value + swComposureDotsTop.Value;
+            int i = swAttributeDexterityDotsTop.Value + swAttributeComposureDotsTop.Value;
             string m = $"Rolled: {d}\nMod: {i}\nTotal: {d + i}";
             MessageBox.Show(m, "Initiative", MessageBoxButton.OK);
         }
@@ -854,20 +834,27 @@ namespace CofD_NPC
 
                 string items = "";
                 foreach (DataItem d in dataGridItems) { items += d.Name + " "; }
+                items = items.ToLower();
 
-                var nWords = (from Match m in Regex.Matches(items.ToLower(), "[a-z]+")
+                var nWords = (from Match m in Regex.Matches(items, "[a-z]+")
                               group m.Value by m.Value)
                              .ToDictionary(gr => gr.Key, gr => gr.Count());
 
-                Func<StrEnum, StrEnum> nullIfEmpty = c => c.Any() ? c : null;
+                static StrEnum nullIfEmpty(StrEnum c) => c.Any() ? c : null;
 
-                var candidates =
-                    nullIfEmpty(new[] { args[0] }.Where(nWords.ContainsKey))
+                StrEnum candidates;
+                try
+                {
+                    candidates = nullIfEmpty(new[] { args[0] }.Where(nWords.ContainsKey))
                     ?? nullIfEmpty(Edits(args[0]).Where(nWords.ContainsKey))
                     ?? nullIfEmpty((from e1 in Edits(args[0])
                                     from e2 in Edits(e1)
                                     where nWords.ContainsKey(e2)
                                     select e2).Distinct());
+                } catch
+                {
+                    candidates = nullIfEmpty(from p in nWords where p.Key.StartsWith(args[0]) select p.Key);
+                }
 
                 IOrderedEnumerable<string> suggestions = args.OrderBy(ar => ar.Length); // Nonsense to avoid exception.
                 if (candidates != null)
@@ -879,7 +866,8 @@ namespace CofD_NPC
                 }
                 foreach (DataItem d in dataGridItems)
                 {
-                    if (d.Name.ToLower().Contains(args[0]) || (candidates != null & suggestions.Contains(d.Name)))
+                    string[] names = d.Name.ToLower().Split(' ');
+                    if (d.Name.ToLower().Contains(args[0]) || (candidates != null & suggestions.Intersect(names).Any()))
                     {
                         d.Visible = true;
                     }
@@ -899,22 +887,19 @@ namespace CofD_NPC
         static StrEnum Edits(string w)
         {
             // Deletion
-#pragma warning disable IDE0057 // Use range operator
             return (from i in Enumerable.Range(0, w.Length)
-                    select w.Substring(0, i) + w.Substring(i + 1))
+                    select string.Concat(w.AsSpan(0, i), w.AsSpan(i + 1)))
              // Transposition
              .Union(from i in Enumerable.Range(0, w.Length - 1)
-                    select w.Substring(0, i) + w.Substring(i + 1, 1) +
-                           w.Substring(i, 1) + w.Substring(i + 2))
+                    select string.Concat(w.AsSpan(0, i), w.AsSpan(i + 1, 1), w.AsSpan(i, 1), w.AsSpan(i + 2)))
              // Alteration
              .Union(from i in Enumerable.Range(0, w.Length)
                     from c in alpha
-                    select w.Substring(0, i) + c + w.Substring(i + 1))
+                    select w[..i] + c + w[(i + 1)..])
              // Insertion
              .Union(from i in Enumerable.Range(0, w.Length + 1)
                     from c in alpha
-                    select w.Substring(0, i) + c + w.Substring(i));
-#pragma warning restore IDE0057 // Use range operator
+                    select w[..i] + c + w[i..]);
 
         }
         #endregion

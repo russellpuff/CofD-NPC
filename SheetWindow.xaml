@@ -218,10 +218,11 @@
                     Height="24"
                     FontFamily="Elephant"
                     Width="85"
-                    HorizontalAlignment="Right"
+                    HorizontalAlignment="Center"
                     MouseEnter="Rectangle_MouseEnter"
                     MouseLeave="Rectangle_MouseLeave" 
-                    Click="QuickRollButton_Click"/>
+                    Click="QuickRollButton_Click"
+                    VerticalAlignment="Center" />
             <RadioButton x:Name="sw10AgainRadio"
                          Grid.Column="4"
                          Grid.Row="6"
@@ -374,7 +375,7 @@
                                    Padding="0,0,0,0"
                                    Foreground="White"
                                    TextAlignment="Left"
-                                   ValueChanged="NumUpDown_ValueChanged" />
+                                   ValueChanged="NumUpDown_ValueChanged"/>
                 <ComboBox x:Name="swVirtueComboBox"
                           FontSize="14"
                           Grid.Column="1"
@@ -749,7 +750,15 @@
                        Content="Initiative:"
                        Grid.Column="0"
                        Grid.Row="17"
-                       Padding="0,0,0,0" />
+                       Padding="0,0,0,0">
+                    <Label.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Roll Initiative"
+                                      Click="RollInit_OnClick"
+                                      CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
+                        </ContextMenu>
+                    </Label.ContextMenu>
+                </Label>
                 <mah:NumericUpDown x:Name="swSizeNumUpDown"
                                    FontSize="14"
                                    Grid.Column="1"
@@ -794,7 +803,7 @@
                                    Padding="0,0,0,0"
                                    Foreground="White"
                                    TextAlignment="Left"
-                                   ValueChanged="NumUpDown_ValueChanged" />
+                                   ValueChanged="NumUpDown_ValueChanged"/>
                 <TextBox x:Name="swArmorTextBox"
                          FontSize="14"
                          Grid.Column="1"
@@ -1617,7 +1626,7 @@
                         </ContextMenu>
                     </ComboBox.ContextMenu>
                 </ComboBox>
-                <md:RatingBar x:Name="swIntelligenceDotsTop"
+                <md:RatingBar x:Name="swAttributeIntelligenceDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1641,7 +1650,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swIntelligenceDotsBottom"
+                <md:RatingBar x:Name="swAttributeIntelligenceDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -1666,7 +1675,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swWitsDotsTop"
+                <md:RatingBar x:Name="swAttributeWitsDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1690,7 +1699,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swWitsDotsBottom"
+                <md:RatingBar x:Name="swAttributeWitsDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -1715,7 +1724,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swResolveDotsTop"
+                <md:RatingBar x:Name="swAttributeResolveDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1739,7 +1748,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swResolveDotsBottom"
+                <md:RatingBar x:Name="swAttributeResolveDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -1764,7 +1773,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swStrengthDotsTop"
+                <md:RatingBar x:Name="swAttributeStrengthDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1788,7 +1797,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swStrengthDotsBottom"
+                <md:RatingBar x:Name="swAttributeStrengthDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -1813,7 +1822,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swDexterityDotsTop"
+                <md:RatingBar x:Name="swAttributeDexterityDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1837,7 +1846,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swDexterityDotsBottom"
+                <md:RatingBar x:Name="swAttributeDexterityDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -1862,7 +1871,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swStaminaDotsTop"
+                <md:RatingBar x:Name="swAttributeStaminaDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1886,7 +1895,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swStaminaDotsBottom"
+                <md:RatingBar x:Name="swAttributeStaminaDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -1911,7 +1920,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swPresenceDotsTop"
+                <md:RatingBar x:Name="swAttributePresenceDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1935,7 +1944,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swPresenceDotsBottom"
+                <md:RatingBar x:Name="swAttributePresenceDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -1960,7 +1969,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swManipulationDotsTop"
+                <md:RatingBar x:Name="swAttributeManipulationDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -1984,7 +1993,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swManipulationDotsBottom"
+                <md:RatingBar x:Name="swAttributeManipulationDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -2009,7 +2018,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swComposureDotsTop"
+                <md:RatingBar x:Name="swAttributeComposureDotsTop"
                               Max="0"
                               ValueChanged="Dots_ValueChanged"
                               Grid.Column="1"
@@ -2033,7 +2042,7 @@
                         </DataTemplate>
                     </md:RatingBar.ValueItemTemplate>
                 </md:RatingBar>
-                <md:RatingBar x:Name="swComposureDotsBottom"
+                <md:RatingBar x:Name="swAttributeComposureDotsBottom"
                               Foreground="#FF707070"
                               Max="5"
                               ValueChanged="Dots_ValueChanged"
@@ -2879,7 +2888,8 @@
                               BorderBrush="#FFFFC107"
                               Background="{x:Null}"
                               Foreground="#FFFFC107"
-                              Checked="SaveToggle_Checked" />
+                              IsHitTestVisible="False"
+                              IsTabStop="False"/>
                 <Button x:Name="swSettingsButton"
                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                         Background="White"
