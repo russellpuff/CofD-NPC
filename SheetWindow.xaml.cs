@@ -2,6 +2,7 @@
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -15,6 +16,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml;
 using System.Xml.Serialization;
 using StrEnum = System.Collections.Generic.IEnumerable<string>;
 
@@ -81,7 +83,7 @@ namespace CofD_NPC
                 {
                     NPC n = DecompressFile(file);
                     NPCs.Add(n);
-                    dataGridItems.Add(new DataItem() { Name = n.Name, Description = n.Description, ID = n.ID.ToString(), Visible = true });
+                    dataGridItems.Add(new DataItem() { Name = n.Name, ID = n.ID.ToString(), Visible = true });
                 }
                 catch
                 {
@@ -90,6 +92,7 @@ namespace CofD_NPC
                 }
             }
             swDataGrid.ItemsSource = dataGridItems;
+            SortDataGrid(swDataGrid);
         }
 #nullable disable
         private static NPC DecompressFile(FileInfo file)
@@ -195,16 +198,16 @@ namespace CofD_NPC
                 // If in list, update. Otherwise, add to list.  
                 if (!NPCs.Any(n => n.ID == SNPC.ID)) { 
                     NPCs.Add(SNPC); 
-                    DataItem d = new() { Name = SNPC.Name, Description = SNPC.Description, ID = SNPC.ID, Visible = true };
+                    DataItem d = new() { Name = SNPC.Name, ID = SNPC.ID, Visible = true };
                     dataGridItems.Add(d);
                 } else
                 {
                     int idx = dataGridItems.FindIndex(di => di.ID == SNPC.ID);
                     dataGridItems[idx].Name = SNPC.Name;
-                    dataGridItems[idx].Description = SNPC.Description;
                 }
                 swNPCSearchTextBox.Text = "";
                 swDataGrid.Items.Refresh();
+                SortDataGrid(swDataGrid);
             }
             catch (Exception ex)
             {
@@ -216,6 +219,27 @@ namespace CofD_NPC
             }
             deactivateDangerousEvents = false;
             return true;
+        }
+
+        public static void SortDataGrid(DataGrid dataGrid, int columnIndex = 0, ListSortDirection sortDirection = ListSortDirection.Ascending)
+        {
+            var column = dataGrid.Columns[columnIndex];
+
+            // Clear current sort descriptions
+            dataGrid.Items.SortDescriptions.Clear();
+
+            // Add the new sort description
+            dataGrid.Items.SortDescriptions.Add(new SortDescription(column.SortMemberPath, sortDirection));
+
+            // Apply sort
+            foreach (var col in dataGrid.Columns)
+            {
+                col.SortDirection = null;
+            }
+            column.SortDirection = sortDirection;
+
+            // Refresh items to display sort
+            dataGrid.Items.Refresh();
         }
 
         private void CompressFile()
@@ -559,17 +583,26 @@ namespace CofD_NPC
                 }
             }
         }
-#nullable enable
+
 
         // Sheet "quick load" function.
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (deactivateDangerousEvents) { return; }
             deactivateDangerousEvents = true;
 
             int idx = swDataGrid.SelectedIndex;
-            if (idx == -1) { return; }
-            SNPC = NPCs[idx];
-
+            if (idx == -1) {
+                deactivateDangerousEvents = false;
+                return; 
+            }
+            DataItem di = (DataItem)swDataGrid.SelectedItems[0];
+            SNPC = NPCs.Find(n => n.ID == di.ID);
+            if (SNPC == null) {
+                deactivateDangerousEvents = false;
+                return; 
+            }
+#nullable enable
             string path = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + SNPC.ID + ".png";
             if (File.Exists(path)) { swPortraitImage.Source = LoadImage(path); } else
             {
@@ -729,12 +762,13 @@ namespace CofD_NPC
             string m = "Are you sure you want to delete " + SNPC.Name + "?";
             var result = MessageBox.Show(m, "Delete NPC?", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.No) { return; }
+            string id = SNPC.ID;
             NPCs.RemoveAll(x => x.ID == SNPC.ID);
             dataGridItems.RemoveAll(x => x.ID == SNPC.ID);
             swDataGrid.SelectedIndex = 0;
-            string path = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + SNPC.ID + ".npc";
+            string path = AppDomain.CurrentDomain.BaseDirectory + $"/NPC/{id}.npc";
             File.Delete(path);
-            path = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + SNPC.ID + ".png";
+            path = AppDomain.CurrentDomain.BaseDirectory + $"/NPC/{id}.png";
             if (File.Exists(path)) { File.Delete(path); }
             swDataGrid.Items.Refresh();
         }

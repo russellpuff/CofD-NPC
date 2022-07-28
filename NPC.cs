@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 
 namespace CofD_NPC
 {
-    [Serializable]
     [XmlRoot("NPCRoot")]
     public class NPC
     {
@@ -31,7 +30,7 @@ namespace CofD_NPC
         [XmlAttribute("HealthDots")]
         public int HealthDots { get; set; }
 
-        [XmlAttribute("HealthStates")]
+        [XmlArray("HealthStates")]
         public int[] HealthStates { get; set; }
 
         [XmlAttribute("WillpowerDots")]
@@ -88,16 +87,16 @@ namespace CofD_NPC
         [XmlAttribute("Composure")]
         public int Composure { get; set; }
 
-        [XmlAttribute("Skills")]
+        [XmlArray("Skills")]
         public string[] Skills { get; set; }
 
-        [XmlAttribute("SkillDots")]
+        [XmlArray("SkillDots")]
         public int[] SkillDots { get; set; }
 
-        [XmlAttribute("Merits")]
+        [XmlArray("Merits")]
         public string[] Merits { get; set; }
 
-        [XmlAttribute("MeritDots")]
+        [XmlArray("MeritDots")]
         public int[] MeritDots { get; set; }
 
         [XmlAttribute("Conditions")]
@@ -168,13 +167,6 @@ namespace CofD_NPC
         {
             get => _name;
             set => SetField(ref _name, value);
-        }
-
-        private string? _description;
-        public string? Description
-        {
-            get => _description;
-            set => SetField(ref _description, value);
         }
 
         private string? _id;

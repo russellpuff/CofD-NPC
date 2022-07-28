@@ -85,14 +85,8 @@
                                         Header="Name"
                                         IsReadOnly="True"
                                         SortDirection="Ascending"
-                                        Width="130"
+                                        Width="Auto"
                                         Binding="{Binding Name}" />
-                    <DataGridTextColumn CanUserResize="False"
-                                        CanUserReorder="False"
-                                        Header="Description"
-                                        IsReadOnly="True"
-                                        Width="100"
-                                        Binding="{Binding Description}" />
                     <DataGridTextColumn CanUserResize="False"
                                         CanUserReorder="False"
                                         Header="ID"
