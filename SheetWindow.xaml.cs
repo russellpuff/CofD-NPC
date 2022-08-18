@@ -770,7 +770,7 @@ namespace CofD_NPC
             File.Delete(path);
             path = AppDomain.CurrentDomain.BaseDirectory + $"/NPC/{id}.png";
             if (File.Exists(path)) { File.Delete(path); }
-            swDataGrid.Items.Refresh();
+            SortDataGrid(swDataGrid);
         }
 
         private void Clear_OnClick(object sender, RoutedEventArgs e)
