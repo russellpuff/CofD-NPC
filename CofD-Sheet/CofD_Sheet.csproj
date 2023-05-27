@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <RootNamespace>CofD_Sheet</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>False</UseWindowsForms>
+    <ApplicationIcon>cofd.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\aggravated.png" />
+    <None Remove="Resources\aggravated_h.png" />
+    <None Remove="Resources\aggravated_yellow.png" />
+    <None Remove="Resources\bashing.png" />
+    <None Remove="Resources\bashing_h.png" />
+    <None Remove="Resources\bashing_yellow.png" />
+    <None Remove="Resources\blank.png" />
+    <None Remove="Resources\healthy.png" />
+    <None Remove="Resources\healthy_h.png" />
+    <None Remove="Resources\healthy_transparent.png" />
+    <None Remove="Resources\lethal.png" />
+    <None Remove="Resources\lethal_h.png" />
+    <None Remove="Resources\lethal_yellow.png" />
+    <None Remove="Resources\Mortal.png" />
+    <None Remove="Resources\NPC.png" />
+    <None Remove="Resources\SkullMTA.png" />
+    <None Remove="Resources\SkullVTR.png" />
+    <None Remove="Resources\SkullWTF.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="cofd.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\aggravated.png" />
+    <Resource Include="Resources\aggravated_yellow.png" />
+    <Resource Include="Resources\bashing.png" />
+    <Resource Include="Resources\bashing_yellow.png" />
+    <Resource Include="Resources\blank.png" />
+    <Resource Include="Resources\healthy.png" />
+    <Resource Include="Resources\healthy_transparent.png" />
+    <Resource Include="Resources\lethal.png" />
+    <Resource Include="Resources\lethal_yellow.png" />
+    <Resource Include="Resources\Mortal.png" />
+    <Resource Include="Resources\NPC.png" />
+    <Resource Include="Resources\SkullMTA.png" />
+    <Resource Include="Resources\SkullVTR.png" />
+    <Resource Include="Resources\SkullWTF.png" />
+  </ItemGroup>
+
+</Project>
