@@ -28,8 +28,18 @@
               Width="1920">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" />
-                <ColumnDefinition Width="806*" />
+                <ColumnDefinition Width="4" />
+                <ColumnDefinition Width="900" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <ComboBox x:Name="swTypeComboBox" 
+                      Grid.Column="3">
+                <ComboBoxItem Content="NPC" />
+                <ComboBoxItem Content="Mortal" />
+                <ComboBoxItem Content="Vampire" />
+                <ComboBoxItem Content="Mage" />
+                <ComboBoxItem Content="Werewolf" />
+            </ComboBox>
             <Rectangle x:Name="swVertLine3"
                        Grid.Column="1"
                        Height="760"
@@ -91,7 +101,8 @@
                                                 Header="Type">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Source="{Binding Image}" />
+                                    <Image Source="{Binding Image}" 
+                                           Stretch="Uniform"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -141,7 +152,7 @@
                         VerticalAlignment="Bottom"
                         Width="40"
                         Height="40"
-                        Click="AddNPCButton_Click">
+                        Click="AddCharacterButton_Click">
                     <md:PackIcon Kind="Plus"
                                  Width="32"
                                  Height="32" />

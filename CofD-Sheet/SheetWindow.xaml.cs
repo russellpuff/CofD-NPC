@@ -82,7 +82,7 @@ namespace CofD_Sheet
             Directory.CreateDirectory(path);
 
             DirectoryInfo di = new(path);
-            foreach (var file in di.GetFiles("*.npc"))
+            foreach (var file in di.GetFiles("*.chr"))
             {
                 try
                 {
@@ -126,20 +126,20 @@ namespace CofD_Sheet
         }
         #endregion
 
-        #region save-npc
+        #region save-character
         private void SaveButton_Click(object sender, RoutedEventArgs e)
-        { SaveNPC(); }
+        { SaveCharacter(); }
 
         private bool PromptToSaveChanges()
         { // True means the user handled their decision and wants to proceed. False means they canclled.
             const string m = "You have unsaved changes. Would you like to save them first?";
             var result = MessageBox.Show(m, "Unsaved Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Cancel) { return false; }
-            if (result == MessageBoxResult.Yes) { SaveNPC(); }
+            if (result == MessageBoxResult.Yes) { SaveCharacter(); }
             return true;
         }
 
-        private bool SaveNPC()
+        private bool SaveCharacter()
         {
             deactivateDangerousEvents = true;
             try
@@ -169,6 +169,7 @@ namespace CofD_Sheet
                 characterToSave.Conditions = swConditionsTextBox.Text;
                 characterToSave.Aspirations = swAspirationsTextBox.Text;
                 characterToSave.WillpowerCurrent = 0;
+                characterToSave.Type = (TemplateType)swTypeComboBox.SelectedIndex; // This SHOULD properly translate 1:1. 
 
                 for (int i = 0; i < 16; ++i)
                 {
@@ -197,10 +198,10 @@ namespace CofD_Sheet
 
                 try
                 {
-                    if (swPortraitImage.Source != blank_portrait && !portraitPath.Contains("/NPC/"))
+                    if (swPortraitImage.Source != blank_portrait && !portraitPath.Contains("/Characters/"))
                     {
                         string[] oldpath = portraitPath.Split('.');
-                        string newpath = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + characterToSave.ID + ".png";
+                        string newpath = AppDomain.CurrentDomain.BaseDirectory + "/Characters/" + characterToSave.ID + ".png";
                         File.Copy(portraitPath, newpath, true);
                     }
                 } catch (IOException)
@@ -231,7 +232,7 @@ namespace CofD_Sheet
             catch (Exception ex)
             {
                 string m = ex.Message;
-                //string m = "There was an error trying to save this NPC.\n";
+                //string m = "There was an error trying to save this character.\n";
                 //m += $"\n\nTry deleting  and then try again.";
                 MessageBox.Show(m, "Save error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
@@ -263,7 +264,7 @@ namespace CofD_Sheet
 
         private void CompressFile()
         {
-            string path = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + characterToSave.ID.ToString() + ".npc";
+            string path = AppDomain.CurrentDomain.BaseDirectory + "/Characters/" + characterToSave.ID.ToString() + ".chr";
             using MemoryStream ms = new();
             XmlSerializer xs = new(typeof(Character));
             xs.Serialize(ms, characterToSave);
@@ -439,7 +440,7 @@ namespace CofD_Sheet
             swRollSectionRectangle.Stroke = b;
         }
 #nullable enable
-        private void AddNPCButton_Click(object sender, RoutedEventArgs e)
+        private void AddCharacterButton_Click(object sender, RoutedEventArgs e)
         {
             ClearForm();
         }
@@ -451,7 +452,7 @@ namespace CofD_Sheet
             IEnumerable<Image> images = GetChildren(swMajorGrid).OfType<Image>();
             foreach(Image image in images) { image.Source = health_healthy; }
             swPortraitImage.Source = blank_portrait;
-            ClearExternal(swLeftGrid);
+            ClearExternal(swInnerLeftGrid);
             foreach (var x in swMainGrid.Children)
             {
                 if (x is Grid g) { ClearExternal(g); }
@@ -542,7 +543,7 @@ namespace CofD_Sheet
             {
                 const string m = "NPC must be saved before Dice Roller can be used. Save now?";
                 var result = MessageBox.Show(m, "Dice Roller", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes && SaveNPC()) { } // Just a funky way of checking both at the same time.
+                if (result == MessageBoxResult.Yes && SaveCharacter()) { } // Just a funky way of checking both at the same time.
                 else { return; }
             }
 
@@ -622,7 +623,7 @@ namespace CofD_Sheet
                 return; 
             }
 #nullable enable
-            string path = AppDomain.CurrentDomain.BaseDirectory + "/NPC/" + characterToSave.ID + ".png";
+            string path = AppDomain.CurrentDomain.BaseDirectory + "/Characters/" + characterToSave.ID + ".png";
             if (File.Exists(path)) { swPortraitImage.Source = LoadImage(path); } else
             {
                 swPortraitImage.Source = blank_portrait;
@@ -801,7 +802,7 @@ namespace CofD_Sheet
         #endregion
 
         #region context-menu
-        private void Save_OnClick(object sender, RoutedEventArgs e) { _ = SaveNPC(); }
+        private void Save_OnClick(object sender, RoutedEventArgs e) { _ = SaveCharacter(); }
 
         private void ChooseImage_OnClick(object sender, RoutedEventArgs e) {
             OpenPortraitFile();
@@ -825,9 +826,9 @@ namespace CofD_Sheet
             allCharacters.RemoveAll(x => x.ID == characterToSave.ID);
             dataGridItems.RemoveAll(x => x.ID == characterToSave.ID);
             swCharactersDataGrid.SelectedIndex = 0;
-            string path = AppDomain.CurrentDomain.BaseDirectory + $"/NPC/{id}.npc";
+            string path = AppDomain.CurrentDomain.BaseDirectory + $"/Characters/{id}.chr";
             File.Delete(path);
-            path = AppDomain.CurrentDomain.BaseDirectory + $"/NPC/{id}.png";
+            path = AppDomain.CurrentDomain.BaseDirectory + $"/Characters/{id}.png";
             if (File.Exists(path)) { File.Delete(path); }
             SortDataGrid(swCharactersDataGrid);
         }
