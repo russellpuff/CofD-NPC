@@ -62,6 +62,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="10" />
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="swCharacterSearchBox"
@@ -72,9 +73,24 @@
                          Grid.Row="2"
                          TextChanged="SearchBar_TextChanged">
                 </TextBox>
+                <ComboBox x:Name="swCharacterFilterComboBox"
+                          md:HintAssist.Hint="Filter Type"
+                          Grid.Column="2"
+                          Grid.Row="2"
+                          FontSize="18"
+                          Foreground="White"
+                          SelectionChanged="FilterComboBox_SelectionChanged">
+                    <ComboBoxItem Content="-No Filter-" />
+                    <ComboBoxItem Content="NPC" />
+                    <ComboBoxItem Content="Mortal" />
+                    <ComboBoxItem Content="Vampire" />
+                    <ComboBoxItem Content="Mage" />
+                    <ComboBoxItem Content="Werewolf" />
+                </ComboBox>
                 <DataGrid x:Name="swCharactersDataGrid"
                           Grid.Column="1"
                           Grid.Row="3"
+                          Grid.ColumnSpan="2"
                           Background="#FF424242"
                           Foreground="White"
                           AutoGenerateColumns="False"
@@ -93,16 +109,24 @@
                                             IsReadOnly="True"
                                             SortDirection="Ascending"
                                             Width="*"
-                                            Binding="{Binding Name}" />
+                                            Binding="{Binding Name}"
+                                            FontSize="24"/>
                         <DataGridTemplateColumn CanUserResize="False"
                                                 CanUserReorder="False"
                                                 IsReadOnly="True"
-                                                Width="60"
-                                                Header="Type">
+                                                Width="70"
+                                                Header="Type"
+                                                SortMemberPath="TypeSortValue">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Source="{Binding Image}" 
-                                           Stretch="Uniform"/>
+                                    <Image Source="{Binding Image}"
+                                           Stretch="Uniform">
+                                        <Image.ToolTip>
+                                            <ToolTip>
+                                                <TextBlock Text="{Binding TypeToolTip}" />
+                                            </ToolTip>
+                                        </Image.ToolTip>
+                                    </Image>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -178,6 +202,7 @@
                 <Rectangle x:Name="swPortraitRectangle"
                            Grid.Column="1"
                            Grid.Row="1"
+                           Grid.ColumnSpan="2"
                            Stroke="#FF707070"
                            RadiusX="5"
                            RadiusY="5"
@@ -185,7 +210,8 @@
                            MouseLeave="Rectangle_MouseLeave" />
                 <Grid x:Name="swQuickRollGrid"
                       Grid.Row="5"
-                      Grid.Column="1">
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="60" />

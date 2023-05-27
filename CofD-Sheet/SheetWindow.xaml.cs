@@ -101,6 +101,15 @@ namespace CofD_Sheet
                             TemplateType.Werewolf => type_werewolf,
                             _ => null
                         },
+                        TypeToolTip = n.Type switch
+                        {
+                            TemplateType.NPC => "NPC",
+                            TemplateType.Mortal => "Mortal",
+                            TemplateType.Vampire => "Vampire",
+                            TemplateType.Mage => "Mage",
+                            TemplateType.Werewolf => "Werewolf",
+                            _ => null
+                        },
                         Visible = true
                     });
                 }
@@ -217,7 +226,34 @@ namespace CofD_Sheet
                 unsaved = false;
                 // If in list, update. Otherwise, add to list.  
                 if (!allCharacters.Any(n => n.ID == characterToSave.ID)) { 
-                    allCharacters.Add(characterToSave); 
+                    allCharacters.Add(characterToSave);
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    // update this to new version
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
+                    //
                     DataItem d = new() { Name = characterToSave.Name, ID = characterToSave.ID, Visible = true };
                     dataGridItems.Add(d);
                 } else
@@ -295,6 +331,34 @@ namespace CofD_Sheet
                     e.Cancel = true;
                     return;
                 }
+            }
+        }
+
+        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (swCharacterFilterComboBox.SelectedIndex == -1) { return; }
+            swCharacterSearchBox.Text = string.Empty;
+            if (swCharacterFilterComboBox.SelectedIndex == 0) 
+            { 
+                foreach(var dataitem in dataGridItems) { dataitem.Visible = true; }
+                swCharacterFilterComboBox.SelectedIndex = -1; 
+                return; 
+            }
+
+            var targetType = swCharacterFilterComboBox.SelectedIndex switch
+            {
+                1 => type_npc,
+                2 => type_mortal,
+                3 => type_vampire,
+                4 => type_mage,
+                5 => type_werewolf,
+                _ => null
+            };
+
+            foreach (var dataitem in dataGridItems)
+            {
+                if (dataitem.Image == targetType) { dataitem.Visible = true; }
+                else { dataitem.Visible = false; }
             }
         }
 

@@ -177,7 +177,7 @@ namespace CofD_Sheet
         Werewolf
     }
 
-    public class DataItem : PropertyChangedBase
+    public class DataItem : PropertyChangedBase, IComparable<DataItem>
     {
         private string? _name;
         public string? Name
@@ -193,6 +193,29 @@ namespace CofD_Sheet
             set => SetField(ref _image, value);
         }
 
+        private string? _typeTooltip;
+        public string? TypeToolTip
+        {
+            get => _typeTooltip;
+            set => SetField(ref _typeTooltip, value);
+        }
+
+        public int TypeSortValue
+        {
+            get
+            {
+                return _typeTooltip switch
+                {
+                    "NPC" => 1,
+                    "Mortal" => 2,
+                    "Vampire" => 3,
+                    "Mage" => 4,
+                    "Werewolf" => 5,
+                    _ => 0,
+                };
+            }
+        }
+
         private string? _id;
         public string? ID
         {
@@ -205,6 +228,12 @@ namespace CofD_Sheet
         {
             get => _visible;
             set => SetField(ref _visible, value);
+        }
+
+        public int CompareTo(DataItem? other)
+        {
+            if (other == null) return 0;
+            return TypeSortValue.CompareTo(other.TypeSortValue);
         }
     }
 }
