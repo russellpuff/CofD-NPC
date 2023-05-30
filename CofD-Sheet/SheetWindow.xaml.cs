@@ -7,11 +7,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using StrEnum = System.Collections.Generic.IEnumerable<string>;
 
@@ -19,9 +21,10 @@ namespace CofD_Sheet
 {
     public partial class SheetWindow : Window
     {
+        //------------------------------------------------PRIVATE VARIABLES------------------------------------------------//
 #nullable disable
         BitmapImage health_healthy, health_bashing, health_lethal, health_aggravated, blank_portrait,
-            type_npc, type_mortal, type_vampire, type_mage, type_werewolf;
+            type_npc, type_mortal, type_ephemeral, type_vampire, type_mage, type_werewolf;
 #nullable enable
         const string alpha = "abcdefghijklmnopqrstuvwxyz";
         string portraitPath = "none";
@@ -33,7 +36,7 @@ namespace CofD_Sheet
         // For use with panning across beeg dpi or smol window. 
         bool isPanning = false;
         Point lastMousePosition = new();
-        // End panning variables
+        //-----------------------------------------------------------------------------------------------------------------//
 
         #region form-load
         public SheetWindow()
@@ -42,8 +45,7 @@ namespace CofD_Sheet
             InitializeImages();
             LoadSBDictionary();
             LoadNPCList();
-            ClearForm();
-            sw10AgainRadio.IsChecked = true;
+            ClearForm(); // This triggers a few things necessary for a fresh, clean form. 
             characterToSave = new();
             unsaved = false;
         }
@@ -54,12 +56,13 @@ namespace CofD_Sheet
             health_bashing = new BitmapImage(new Uri("pack://application:,,,/Resources/bashing_yellow.png"));
             health_lethal = new BitmapImage(new Uri("pack://application:,,,/Resources/lethal_yellow.png"));
             health_aggravated = new BitmapImage(new Uri("pack://application:,,,/Resources/aggravated_yellow.png"));
-            blank_portrait = new BitmapImage(new Uri("pack://application:,,,/Resources/blank.png"));
-            type_npc = new BitmapImage(new Uri("pack://application:,,,/Resources/NPC.png"));
-            type_mortal = new BitmapImage(new Uri("pack://application:,,,/Resources/Mortal.png"));
-            type_vampire = new BitmapImage(new Uri("pack://application:,,,/Resources/SkullVTR.png"));
-            type_mage = new BitmapImage(new Uri("pack://application:,,,/Resources/SkullMTA.png"));
-            type_werewolf = new BitmapImage(new Uri("pack://application:,,,/Resources/SkullWTF.png"));
+            blank_portrait = new BitmapImage(new Uri("pack://application:,,,/Resources/blank_portrait.png"));
+            type_npc = new BitmapImage(new Uri("pack://application:,,,/Resources/type_icon_npc.png"));
+            type_mortal = new BitmapImage(new Uri("pack://application:,,,/Resources/type_icon_mortal.png"));
+            type_ephemeral = new BitmapImage(new Uri("pack://application:,,,/Resources/type_icon_ephemeral.png"));
+            type_vampire = new BitmapImage(new Uri("pack://application:,,,/Resources/type_icon_vampire.png"));
+            type_mage = new BitmapImage(new Uri("pack://application:,,,/Resources/type_icon_mage.png"));
+            type_werewolf = new BitmapImage(new Uri("pack://application:,,,/Resources/type_icon_werewolf.png"));
             swPortraitImage.Source = blank_portrait;
             foreach (UIElement c in swHealthStateGrid.Children)
             {
@@ -96,6 +99,7 @@ namespace CofD_Sheet
                         {
                             TemplateType.NPC => type_npc,
                             TemplateType.Mortal => type_mortal,
+                            TemplateType.Ephemeral => type_ephemeral,
                             TemplateType.Vampire => type_vampire,
                             TemplateType.Mage => type_mage,
                             TemplateType.Werewolf => type_werewolf,
@@ -105,6 +109,7 @@ namespace CofD_Sheet
                         {
                             TemplateType.NPC => "NPC",
                             TemplateType.Mortal => "Mortal",
+                            TemplateType.Ephemeral => "Ephemeral",
                             TemplateType.Vampire => "Vampire",
                             TemplateType.Mage => "Mage",
                             TemplateType.Werewolf => "Werewolf",
@@ -165,7 +170,7 @@ namespace CofD_Sheet
                 characterToSave.Defense = swDefenseNumUpDown.Value != null ? (int)swDefenseNumUpDown.Value : 0;
                 characterToSave.Armor = swArmorTextBox.Text;
                 characterToSave.Initiative = swInitiativeNumUpDown.Value != null ? (int)swInitiativeNumUpDown.Value : 0;
-                characterToSave.Description = swDescriptionTextBox.Text;
+                characterToSave.Description = ""; //swDescriptionTextBox.Text;
                 characterToSave.Intelligence = (int)swAttributeIntelligenceDotsTop.Value;
                 characterToSave.Wits = (int)swAttributeWitsDotsTop.Value;
                 characterToSave.Resolve = (int)swAttributeResolveDotsTop.Value;
@@ -227,35 +232,32 @@ namespace CofD_Sheet
                 // If in list, update. Otherwise, add to list.  
                 if (!allCharacters.Any(n => n.ID == characterToSave.ID)) { 
                     allCharacters.Add(characterToSave);
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    // update this to new version
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //
-                    DataItem d = new() { Name = characterToSave.Name, ID = characterToSave.ID, Visible = true };
-                    dataGridItems.Add(d);
+                    dataGridItems.Add(new DataItem()
+                    {
+                        Name = characterToSave.Name,
+                        ID = characterToSave.ID.ToString(),
+                        Image = characterToSave.Type switch
+                        {
+                            TemplateType.NPC => type_npc,
+                            TemplateType.Mortal => type_mortal,
+                            TemplateType.Ephemeral => type_ephemeral,
+                            TemplateType.Vampire => type_vampire,
+                            TemplateType.Mage => type_mage,
+                            TemplateType.Werewolf => type_werewolf,
+                            _ => null
+                        },
+                        TypeToolTip = characterToSave.Type switch
+                        {
+                            TemplateType.NPC => "NPC",
+                            TemplateType.Mortal => "Mortal",
+                            TemplateType.Ephemeral => "Ephemeral",
+                            TemplateType.Vampire => "Vampire",
+                            TemplateType.Mage => "Mage",
+                            TemplateType.Werewolf => "Werewolf",
+                            _ => null
+                        },
+                        Visible = true
+                    });
                 } else
                 {
                     int idx = dataGridItems.FindIndex(di => di.ID == characterToSave.ID);
@@ -265,7 +267,7 @@ namespace CofD_Sheet
                 swCharactersDataGrid.Items.Refresh();
                 SortDataGrid(swCharactersDataGrid);
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
                 string m = ex.Message;
                 //string m = "There was an error trying to save this character.\n";
@@ -322,7 +324,7 @@ namespace CofD_Sheet
         #endregion
 
         #region events
-        private void SheetWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+        private void SheetWindow_Closing(object sender, CancelEventArgs e) {
             if (unsaved)
             {
                 var result = MessageBox.Show("Do you really want to exit?", "Unsaved changes", MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -349,9 +351,10 @@ namespace CofD_Sheet
             {
                 1 => type_npc,
                 2 => type_mortal,
-                3 => type_vampire,
-                4 => type_mage,
-                5 => type_werewolf,
+                3 => type_ephemeral,
+                4 => type_vampire,
+                5 => type_mage,
+                6 => type_werewolf,
                 _ => null
             };
 
@@ -396,6 +399,7 @@ namespace CofD_Sheet
             Brush gold = (Brush)cv.ConvertFromString("#FFFFC107");
             // Prevent valuechanged event from firing lol.
             deactivateDangerousEvents = true;
+            rb.Visibility = other.Visibility = Visibility.Visible; // Enable visibility if hidden. 
             if (istop)
             {
                 rb.Max = (int)rb.Value;
@@ -493,7 +497,7 @@ namespace CofD_Sheet
             }
             catch
             {
-                swRollSectionRectangle.Stroke = b;
+                //swRollSectionRectangle.Stroke = b;
             }
         }
 
@@ -501,13 +505,11 @@ namespace CofD_Sheet
             var cv = new BrushConverter();
             Brush b = (Brush)cv.ConvertFromString("#FF707070");
             swPortraitRectangle.Stroke = b;
-            swRollSectionRectangle.Stroke = b;
+            //swRollSectionRectangle.Stroke = b;
         }
 #nullable enable
-        private void AddCharacterButton_Click(object sender, RoutedEventArgs e)
-        {
-            ClearForm();
-        }
+        private void AddCharacterButton_Click(object? sender, RoutedEventArgs? e)
+        { ClearForm(); }
 
         private void ClearForm()
         {
@@ -515,17 +517,26 @@ namespace CofD_Sheet
             deactivateDangerousEvents = true;
             IEnumerable<Image> images = GetChildren(swMajorGrid).OfType<Image>();
             foreach(Image image in images) { image.Source = health_healthy; }
+
             swPortraitImage.Source = blank_portrait;
-            ClearExternal(swInnerLeftGrid);
-            foreach (var x in swMainGrid.Children)
+            swCharacterSearchBox.Text = string.Empty;
+            swCharacterFilterComboBox.SelectedIndex = -1;
+            swCharactersDataGrid.SelectedIndex = -1;
+
+            foreach (var x in swSheetGrid.Children)
             {
-                if (x is Grid g) { ClearExternal(g); }
+                if (x is Grid g) { ClearGridChildren(g); }
             }
+            // Shitty patch fix to a problem where the icons vanish on form clear.
+            // Despite this code not affecting it in any way. 
+            SortDataGrid(swCharactersDataGrid);
+            swTypeComboBox.SelectedIndex = 0; // This should fire the event to change the UI layout to NPC.
+
             characterToSave = new();
             deactivateDangerousEvents = false;
         }
 
-        private static void ClearExternal(Grid g)
+        private static void ClearGridChildren(Grid g)
         {
             foreach (var c in g.Children)
             {
@@ -642,7 +653,7 @@ namespace CofD_Sheet
         }
 #nullable disable
         // Event fires to warn user of unsaved changed (if applicable) before quick loading
-        // next npc. Gives them a chance to atone for their sins and cancel.
+        // next character. Gives them a chance to atone for their sins and cancel.
         private void DataGrid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             //Get the item being clicked on.
@@ -673,7 +684,7 @@ namespace CofD_Sheet
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (deactivateDangerousEvents) { return; }
-            deactivateDangerousEvents = true;
+            //deactivateDangerousEvents = true;
 
             int idx = swCharactersDataGrid.SelectedIndex;
             if (idx == -1) {
@@ -710,7 +721,7 @@ namespace CofD_Sheet
             swDefenseNumUpDown.Value = characterToSave.Defense;
             swArmorTextBox.Text = characterToSave.Armor;
             swInitiativeNumUpDown.Value = characterToSave.Initiative;
-            swDescriptionTextBox.Text = characterToSave.Description;
+            //swDescriptionTextBox.Text = characterToSave.Description;
             swAttributeIntelligenceDotsTop.Max = characterToSave.Intelligence;
             swAttributeIntelligenceDotsTop.Value = characterToSave.Intelligence;
             swAttributeWitsDotsTop.Max = characterToSave.Wits;
@@ -731,6 +742,7 @@ namespace CofD_Sheet
             swAttributeComposureDotsTop.Value = characterToSave.Composure;
             swConditionsTextBox.Text = characterToSave.Conditions;
             swAspirationsTextBox.Text = characterToSave.Aspirations;
+            swTypeComboBox.SelectedIndex = (int)characterToSave.Type; // Should translate 1:1
             for (int i = 0; i < 16; ++i)
             {
                 // Skills
@@ -764,7 +776,7 @@ namespace CofD_Sheet
                     x.IsChecked = true;
                 }
             }
-            deactivateDangerousEvents = false;
+            //deactivateDangerousEvents = false;
             unsaved = false;
             swSaveToggle.IsChecked = true;
         }
@@ -772,6 +784,7 @@ namespace CofD_Sheet
 #nullable disable // Piss off and die. It's not fucking possible for these to be null.
         private void QuickRollButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
             int die = (int)swQuickRollModNumUpDown.Value;
             bool rote = (bool)swRoteToggleButton.IsChecked;
             int again = 10;
@@ -780,13 +793,12 @@ namespace CofD_Sheet
 
             DieRoller dr = new(die, rote, again);
             dr.Roll();
+            */
         }
 #nullable enable
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            DisplaySearchResults();
-        }
+        { DisplaySearchResults(); }
 
         private void OpenPortraitFile()
         {
@@ -794,7 +806,8 @@ namespace CofD_Sheet
             { // I copied these filters from the internet. What the fuck is .jfif?
                 FileName = "Image",
                 DefaultExt = ".png",
-                Filter = "All Images Files (*.png;*.jpeg;*.gif;*.jpg;*.bmp;*.tiff;*.tif)|*.png;*.jpeg;*.gif;*.jpg;*.bmp;*.tiff;*.tif" +
+                Filter = "All Images Files (*.png;*.jpeg;*.gif;*.jpg;*.bmp;*.tiff;*.tif)|" +
+                "*.png;*.jpeg;*.gif;*.jpg;*.bmp;*.tiff;*.tif" +
             "|PNG Portable Network Graphics (*.png)|*.png" +
             "|JPEG File Interchange Format (*.jpg *.jpeg *jfif)|*.jpg;*.jpeg;*.jfif" +
             "|BMP Windows Bitmap (*.bmp)|*.bmp"
@@ -819,8 +832,8 @@ namespace CofD_Sheet
                 image.StreamSource = stream;
                 image.EndInit();
             }
-            BitmapImage? myRetVal = image;
-            return myRetVal;
+            BitmapImage? ret = image;
+            return ret;
         }
 
         // Event code for panning by pressing the middle mouse button.
@@ -862,6 +875,189 @@ namespace CofD_Sheet
             }
         }
         // End panning code.
+
+        private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void NewAbilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            unsaved = true;
+            Button button = (Button)sender;
+            int row_idx = Grid.GetRow(button); // Get current row of this button.
+            button.IsEnabled = false; // Disable button until user accepts or cancels. 
+
+            swAbilitiesGrid.Height += 260; // Make room for new row (40px) and editor (260px), default allotment is 50px for this row. 
+            swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(260); // Change row height to make room for editor. 
+            RowDefinition newButtonRow = new() { Height = new GridLength(40) };
+            swAbilitiesGrid.RowDefinitions.Insert(row_idx + 1, newButtonRow); // Inject new row.
+            Grid.SetRow(button, row_idx + 1); // Move button
+
+            // Create title box and add to grid.
+            TextBox tempTitlebox = new()
+            {
+                FontSize = 16,
+                VerticalAlignment = VerticalAlignment.Top
+            };
+            HintAssist.SetHint(tempTitlebox, "Ability Name");
+            tempTitlebox.SetResourceReference(TextBox.StyleProperty, "MaterialDesignOutlinedTextBox");
+            swAbilitiesGrid.Children.Add(tempTitlebox);
+            Grid.SetRow(tempTitlebox, row_idx);
+
+            // Create description box and add to grid.
+            TextBox tempDescriptionBox = new()
+            {
+                FontSize = 14,
+                AcceptsReturn = true,
+                AcceptsTab = true,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 64, 0, 30)
+            };
+            HintAssist.SetHint(tempDescriptionBox, "Ability Description");
+            tempDescriptionBox.SetResourceReference(StyleProperty, "MaterialDesignOutlinedTextBox");
+            swAbilitiesGrid.Children.Add(tempDescriptionBox);
+            Grid.SetRow(tempDescriptionBox, row_idx);
+
+            // Create buttons and add to grid.
+            Button tempAcceptButton = new()
+            {
+                Height = 24,
+                Width = 50,
+                Content = new PackIcon() { Kind = PackIconKind.Check },
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(3, 3, 58, 3),
+            };
+            tempAcceptButton.Click += AcceptNewAbilityButton_Click;
+            tempAcceptButton.SetResourceReference(StyleProperty, "MaterialDesignFlatMidBgButton");
+            swAbilitiesGrid.Children.Add(tempAcceptButton);
+            Grid.SetRow(tempAcceptButton, row_idx);
+
+            Button tempCancelButton = new()
+            {
+                Height = 24,
+                Width = 50,
+                Content = new PackIcon() { Kind = PackIconKind.Cancel },
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(57, 3, 3, 3)
+            };
+            tempCancelButton.Click += CancelNewAbilityButton_Click;
+            tempCancelButton.SetResourceReference(StyleProperty, "MaterialDesignPaperButton");
+            swAbilitiesGrid.Children.Add(tempCancelButton);
+            Grid.SetRow(tempCancelButton, row_idx);
+        }
+
+        private void AcceptNewAbilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            int row_idx = Grid.GetRow(button);
+            // Get the textboxes. This returns a list with both boxes, the title in index 0 and description in 1.
+            var textboxes = swAbilitiesGrid.Children
+                .OfType<TextBox>()
+                .Where(tb => Grid.GetRow(tb) == row_idx)
+                .ToList();
+
+            // Modify grid to accept the expander.
+            ClearTempAbilityGridControls(row_idx);
+            swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(50);
+            swAbilitiesGrid.Height -= 210; // Trim excess space.
+
+            // Create expander.
+            CustomExpander tempExpander = new()
+            {
+                VerticalAlignment = VerticalAlignment.Top,
+                Header = textboxes[0].Text,
+                Foreground = Brushes.White,
+                IsExpanded = false,
+                Margin = new Thickness(0, 2, 0, 2)
+            };
+            tempExpander.SetResourceReference(StyleProperty, "GoldMaterialDesignExpander");
+            Grid.SetRow(tempExpander, row_idx);
+            tempExpander.Expanded += AbilityExpander_ExpandedOrCollapsed;
+            tempExpander.Collapsed += AbilityExpander_ExpandedOrCollapsed;
+            tempExpander.ActualHeightChanged += Expander_HeightChanged;
+
+            // Create stackpanel child of expander.
+            StackPanel tempStackPanel = new()
+            {
+                Margin = new Thickness(24, 8, 24, 16),
+                Orientation = Orientation.Vertical
+            };
+            tempStackPanel.SetResourceReference(ForegroundProperty, "MaterialDesignBody");
+
+            // Create textblock child of stackpanel.
+            TextBlock tempTextBlock = new() { Text = textboxes[1].Text, };
+            tempTextBlock.SetResourceReference(StyleProperty, "HorizontalExpanderContentTextBlock");
+
+            // Assemble creation.
+            tempStackPanel.Children.Add(tempTextBlock);
+            tempExpander.Content = tempStackPanel;
+            swAbilitiesGrid.Children.Add(tempExpander);
+
+            swNewAbilityButton.IsEnabled = true;
+        }
+
+        private void Expander_HeightChanged(object sender, EventArgs e)
+        {
+            CustomExpander exp = (CustomExpander)sender;
+            if(exp.IsExpanded)
+            {
+                int row_idx = Grid.GetRow(exp);
+                double height = exp.ActualHeight;
+                if (height > 50)
+                {
+                    int desiredRowHeight = (int)Math.Ceiling(height) + 4;
+                    int targetGridHeight = (int)(swAbilitiesGrid.Height - (1000 - desiredRowHeight));
+                    if (targetGridHeight < 160) { return; } // Shitty patchfix LOL
+                    swAbilitiesGrid.Height = targetGridHeight;
+                    swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(desiredRowHeight);
+                }
+            }
+        }
+
+        private void CancelNewAbilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Modify grid back to the default.
+            Button button = (Button)sender;
+            int row_idx = Grid.GetRow(button);
+            ClearTempAbilityGridControls(row_idx);
+            swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(50);
+            swAbilitiesGrid.Height -= 220;
+            Grid.SetRow(swNewAbilityButton, row_idx); // Return button to its old spot.
+            swNewAbilityButton.IsEnabled = true;
+        }
+
+        private void ClearTempAbilityGridControls(int row_idx)
+        {
+            var controlsToDelete = swAbilitiesGrid.Children
+            .OfType<FrameworkElement>()
+            .Where(element => Grid.GetRow(element) == row_idx)
+            .ToList();
+
+            foreach (var control in controlsToDelete)
+            { swAbilitiesGrid.Children.Remove(control); }
+        }
+
+        private void AbilityExpander_ExpandedOrCollapsed(object sender, RoutedEventArgs e)
+        { ExpanderAdjustGridSize((CustomExpander)sender); }
+
+        private void ExpanderAdjustGridSize(CustomExpander culprit)
+        {
+            int row_idx = Grid.GetRow(culprit);
+            if (culprit.IsExpanded)
+            {
+                double height = culprit.ActualHeight;
+                swAbilitiesGrid.Height += 950;
+                swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(1000);
+                swAbilitiesGrid.UpdateLayout();
+            } else
+            {
+                double targetHeight = swAbilitiesGrid.Height - (culprit.ActualHeight - 50);
+                if (targetHeight < 1) { return; }
+                swAbilitiesGrid.Height = targetHeight;
+                swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(50);
+            }
+        }
 
         #endregion
 
@@ -937,6 +1133,7 @@ namespace CofD_Sheet
                     other.Value = 0;
                     rb.Max = rb.Name.Contains("Attribute") ? 1 : 0;
                     rb.Value = rb.Name.Contains("Attribute") ? 1 : 0;
+                    rb.Visibility = rb.Name.Contains("Attribute") ? Visibility.Visible : Visibility.Hidden; // Hide top layer of dots to mask visual bug. 
                 }
                 else
                 {
@@ -945,9 +1142,9 @@ namespace CofD_Sheet
                     rb.Value = 0;
                     other.Max = other.Name.Contains("Attribute") ? 1 : 0;
                     other.Value = other.Name.Contains("Attribute") ? 1 : 0;
+                    other.Visibility = rb.Name.Contains("Attribute") ? Visibility.Visible : Visibility.Hidden;
                 }
                 deactivateDangerousEvents = false;
-
             }
         }
 

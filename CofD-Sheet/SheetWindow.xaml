@@ -10,7 +10,7 @@
         Background="#FF303030"
         TextElement.FontWeight="Medium"
         mc:Ignorable="d"
-        Title="CofD NPC Manager"
+        Title="CofD Character Sheet Manager"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         ResizeMode="CanResize"
@@ -24,30 +24,20 @@
                   PreviewMouseMove="ScrollViewer_PreviewMouseMove"
                   PreviewMouseUp="ScrollViewer_PreviewMouseUp">
         <Grid x:Name="swMajorGrid"
-              Height="1018"
+              Height="1016"
               Width="1920">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" />
                 <ColumnDefinition Width="4" />
-                <ColumnDefinition Width="900" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ComboBox x:Name="swTypeComboBox" 
-                      Grid.Column="3">
-                <ComboBoxItem Content="NPC" />
-                <ComboBoxItem Content="Mortal" />
-                <ComboBoxItem Content="Vampire" />
-                <ComboBoxItem Content="Mage" />
-                <ComboBoxItem Content="Werewolf" />
-            </ComboBox>
             <Rectangle x:Name="swVertLine3"
                        Grid.Column="1"
-                       Height="760"
+                       Height="996"
                        Stroke="#FF7F7F7F"
                        VerticalAlignment="Center"
-                       Width="1" />
+                       Margin="2,0,2,0" />
             <Grid x:Name="swLeftGrid"
-                  Width="400"
                   Height="Auto"
                   Background="#FF303030">
                 <Grid.RowDefinitions>
@@ -55,9 +45,6 @@
                     <RowDefinition Height="500" />
                     <RowDefinition Height="32" />
                     <RowDefinition Height="400*" />
-                    <RowDefinition Height="2" />
-                    <RowDefinition Height="120" />
-                    <RowDefinition Height="10" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10" />
@@ -77,12 +64,14 @@
                           md:HintAssist.Hint="Filter Type"
                           Grid.Column="2"
                           Grid.Row="2"
-                          FontSize="18"
+                          FontSize="16"
                           Foreground="White"
+                          VerticalAlignment="Bottom"
                           SelectionChanged="FilterComboBox_SelectionChanged">
-                    <ComboBoxItem Content="-No Filter-" />
+                    <ComboBoxItem Content="&lt;No Filter&gt;" />
                     <ComboBoxItem Content="NPC" />
                     <ComboBoxItem Content="Mortal" />
+                    <ComboBoxItem Content="Ephemeral" />
                     <ComboBoxItem Content="Vampire" />
                     <ComboBoxItem Content="Mage" />
                     <ComboBoxItem Content="Werewolf" />
@@ -110,12 +99,12 @@
                                             SortDirection="Ascending"
                                             Width="*"
                                             Binding="{Binding Name}"
-                                            FontSize="24"/>
+                                            FontSize="20" />
                         <DataGridTemplateColumn CanUserResize="False"
                                                 CanUserReorder="False"
                                                 IsReadOnly="True"
                                                 Width="70"
-                                                Header="Type"
+                                                Header="  Type"
                                                 SortMemberPath="TypeSortValue">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -148,6 +137,7 @@
                 <Ellipse x:Name="swAddNPCElipse"
                          Grid.Column="1"
                          Grid.Row="3"
+                         Grid.ColumnSpan="2"
                          VerticalAlignment="Bottom"
                          Height="45"
                          Stroke="#FF303030"
@@ -157,6 +147,7 @@
                 <Rectangle x:Name="swAddNPCRectangle"
                            Grid.Column="1"
                            Grid.Row="3"
+                           Grid.ColumnSpan="2"
                            VerticalAlignment="Bottom"
                            Height="20"
                            Width="50"
@@ -165,6 +156,7 @@
                 <Rectangle x:Name="swAddNPCRectangle2"
                            Grid.Column="1"
                            Grid.Row="3"
+                           Grid.ColumnSpan="2"
                            VerticalAlignment="Bottom"
                            Height="10"
                            Stroke="#FF303030"
@@ -172,6 +164,7 @@
                 <Button x:Name="swAddNPCButton"
                         Grid.Column="1"
                         Grid.Row="3"
+                        Grid.ColumnSpan="2"
                         Style="{StaticResource MaterialDesignIconButton}"
                         VerticalAlignment="Bottom"
                         Width="40"
@@ -208,215 +201,126 @@
                            RadiusY="5"
                            MouseEnter="Rectangle_MouseEnter"
                            MouseLeave="Rectangle_MouseLeave" />
-                <Grid x:Name="swQuickRollGrid"
-                      Grid.Row="5"
-                      Grid.Column="1"
-                      Grid.ColumnSpan="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                    </Grid.RowDefinitions>
-                    <Rectangle x:Name="swRollSectionRectangle"
-                               Grid.Column="1"
-                               Grid.Row="5"
-                               Grid.ColumnSpan="4"
-                               Grid.RowSpan="4"
-                               Width="182"
-                               VerticalAlignment="Stretch"
-                               Stroke="#FF707070"
-                               MouseEnter="Rectangle_MouseEnter"
-                               MouseLeave="Rectangle_MouseLeave"
-                               Fill="#FF303030"
-                               RadiusX="5"
-                               RadiusY="5" />
-                    <TextBlock x:Name="swQuickRollLabel"
-                               Text="Quick Roll"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               FontFamily="Elephant"
-                               FontSize="20"
-                               Foreground="White"
-                               Grid.Row="0"
-                               Grid.Column="1"
-                               Grid.ColumnSpan="4"
-                               MouseEnter="Rectangle_MouseEnter"
-                               MouseLeave="Rectangle_MouseLeave" />
-                    <mah:NumericUpDown x:Name="swQuickRollModNumUpDown"
-                                       FontSize="14"
-                                       Grid.Column="2"
-                                       Grid.ColumnSpan="2"
-                                       Grid.Row="1"
-                                       UpDownButtonsWidth="20"
-                                       ParsingNumberStyle="Integer"
-                                       Minimum="0"
-                                       Maximum="100"
-                                       TrackMouseWheelWhenMouseOver="True"
-                                       Style="{StaticResource MaterialDesignNumericUpDown}"
-                                       RenderTransformOrigin="0.5,0.5"
-                                       Padding="0,0,0,0"
-                                       Foreground="White"
-                                       Value="0"
-                                       TextAlignment="Right"
-                                       HorizontalAlignment="Right"
-                                       Width="85"
-                                       MouseEnter="Rectangle_MouseEnter"
-                                       MouseLeave="Rectangle_MouseLeave" />
-                    <Label x:Name="swRoteLabel"
-                           Grid.Column="2"
-                           Grid.Row="2"
-                           FontSize="14"
-                           Content="Rote"
-                           Padding="2,5,0,0"
-                           HorizontalAlignment="Center" />
-                    <ToggleButton x:Name="swRoteToggleButton"
-                                  Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                                  Grid.Column="3"
-                                  Grid.Row="2"
-                                  Padding="0,0,0,0"
-                                  Width="40"
-                                  MouseEnter="Rectangle_MouseEnter"
-                                  MouseLeave="Rectangle_MouseLeave" />
-                    <Button x:Name="swQuickRollButton"
-                            Style="{StaticResource MaterialDesignFlatMidBgButton}"
-                            Content="Roll"
-                            Grid.Column="2"
-                            Grid.ColumnSpan="2"
-                            Grid.Row="8"
-                            Margin="3"
-                            Height="24"
-                            FontFamily="Elephant"
-                            Width="85"
-                            HorizontalAlignment="Center"
-                            MouseEnter="Rectangle_MouseEnter"
-                            MouseLeave="Rectangle_MouseLeave"
-                            Click="QuickRollButton_Click"
-                            VerticalAlignment="Center" />
-                    <RadioButton x:Name="sw10AgainRadio"
-                                 Grid.Column="4"
-                                 Grid.Row="1"
-                                 Content="10 Again"
-                                 FontSize="14"
-                                 Foreground="White"
-                                 Padding="4,0,0,2"
-                                 MouseEnter="Rectangle_MouseEnter"
-                                 MouseLeave="Rectangle_MouseLeave" />
-                    <RadioButton x:Name="sw9AgainRadio"
-                                 Grid.Column="4"
-                                 Grid.Row="2"
-                                 Content="9 Again"
-                                 FontSize="14"
-                                 Foreground="White"
-                                 Padding="4,0,0,2"
-                                 MouseEnter="Rectangle_MouseEnter"
-                                 MouseLeave="Rectangle_MouseLeave" />
-                    <RadioButton x:Name="sw8AgainRadio"
-                                 Grid.Column="4"
-                                 Grid.Row="3"
-                                 Content="8 Again"
-                                 FontSize="14"
-                                 Foreground="White"
-                                 Padding="4,0,0,2"
-                                 MouseEnter="Rectangle_MouseEnter"
-                                 MouseLeave="Rectangle_MouseLeave" />
-                </Grid>
             </Grid>
-            <Grid x:Name="swMainGrid"
-                  Height="770"
-                  Width="806"
+            <Grid x:Name="swSheetGrid"
                   Grid.Column="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="300" />
-                    <ColumnDefinition Width="3" />
-                    <ColumnDefinition Width="240" />
-                    <ColumnDefinition Width="3" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="280" />
+                    <ColumnDefinition Width="4" />
                     <ColumnDefinition Width="260" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="770" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <Grid x:Name="swInnerLeftGrid"
                       Margin="10"
                       Grid.Column="0"
                       ForceCursor="True">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="32*" />
-                        <RowDefinition Height="28*" />
-                        <RowDefinition Height="28*" />
-                        <RowDefinition Height="32*" />
-                        <RowDefinition Height="28*" />
-                        <RowDefinition Height="28*" />
-                        <RowDefinition Height="32*" />
-                        <RowDefinition Height="28*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="25*" />
-                        <RowDefinition Height="32*" />
-                        <RowDefinition Height="358*" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="28" />
+                        <RowDefinition Height="28" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="28" />
+                        <RowDefinition Height="28" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="28" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="100*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80*" />
                         <ColumnDefinition Width="200*" />
                     </Grid.ColumnDefinitions>
                     <Label x:Name="swNameLabel"
-                           FontSize="14"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
                            Content="Name:"
                            Grid.Column="0"
                            Grid.Row="0"
                            Padding="0,0,0,0" />
-                    <Label x:Name="swAgeLabel"
-                           FontSize="14"
+                    <Label x:Name="swTypeLabel"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
-                           Content="Age:"
+                           Content="Type:"
                            Grid.Column="0"
                            Grid.Row="1"
                            Padding="0,0,0,0" />
-                    <Label x:Name="swVirtueLabel"
-                           FontSize="14"
+                    <Label x:Name="swAgeLabel"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
-                           Content="Virtue:"
+                           Content="Age:"
                            Grid.Column="0"
                            Grid.Row="2"
                            Padding="0,0,0,0" />
-                    <Label x:Name="swViceLabel"
-                           FontSize="14"
+                    <Label x:Name="swVirtueLabel"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
-                           Content="Vice:"
+                           Content="Virtue:"
                            Grid.Column="0"
                            Grid.Row="3"
                            Padding="0,0,0,0" />
-                    <Label x:Name="swConceptLabel"
-                           FontSize="14"
+                    <Label x:Name="swViceLabel"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
-                           Content="Concept:"
+                           Content="Vice:"
                            Grid.Column="0"
                            Grid.Row="4"
                            Padding="0,0,0,0" />
+                    <Label x:Name="swConceptLabel"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
+                           Foreground="White"
+                           Content="Concept:"
+                           Grid.Column="0"
+                           Grid.Row="5"
+                           Padding="0,0,0,0" />
                     <TextBox x:Name="swNameTextBox"
-                             FontSize="14"
+                             FontSize="16"
                              Grid.Column="1"
                              Grid.Row="0"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged">
                     </TextBox>
+                    <ComboBox x:Name="swTypeComboBox"
+                              FontSize="16"
+                              Grid.Column="1"
+                              Grid.Row="1"
+                              Padding="0,0,0,0"
+                              SelectionChanged="TypeComboBox_SelectionChanged">
+                        <ComboBoxItem Content="NPC" />
+                        <ComboBoxItem Content="Mortal" />
+                        <ComboBoxItem Content="Ephemeral" />
+                        <ComboBoxItem Content="Vampire" />
+                        <ComboBoxItem Content="Mage" />
+                        <ComboBoxItem Content="Werewolf" />
+                    </ComboBox>
                     <mah:NumericUpDown x:Name="swAgeNumUpDown"
-                                       FontSize="14"
+                                       FontSize="16"
                                        Grid.Column="1"
-                                       Grid.Row="1"
+                                       Grid.Row="2"
                                        UpDownButtonsWidth="20"
                                        ParsingNumberStyle="Integer"
                                        Minimum="1"
@@ -429,9 +333,9 @@
                                        TextAlignment="Left"
                                        ValueChanged="NumUpDown_ValueChanged" />
                     <ComboBox x:Name="swVirtueComboBox"
-                              FontSize="14"
+                              FontSize="16"
                               Grid.Column="1"
-                              Grid.Row="2"
+                              Grid.Row="3"
                               Padding="0,0,0,0"
                               IsEditable="True"
                               LostFocus="ComboBox_LostFocus">
@@ -450,9 +354,9 @@
                         <ComboBoxItem Content="Trustworthy" />
                     </ComboBox>
                     <ComboBox x:Name="swViceComboBox"
-                              FontSize="14"
+                              FontSize="16"
                               Grid.Column="1"
-                              Grid.Row="3"
+                              Grid.Row="4"
                               Padding="0,0,0,0"
                               IsEditable="True">
                         <ComboBoxItem Content="Ambitious" />
@@ -470,15 +374,15 @@
                         <ComboBoxItem Content="Violent" />
                     </ComboBox>
                     <TextBox x:Name="swConceptTextBox"
-                             FontSize="14"
+                             FontSize="16"
                              Grid.Column="1"
-                             Grid.Row="4"
+                             Grid.Row="5"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged">
                     </TextBox>
                     <Label x:Name="swHealthLabel"
                            Grid.Column="0"
-                           Grid.Row="5"
+                           Grid.Row="6"
                            Grid.ColumnSpan="2"
                            Content="Health"
                            FontSize="20"
@@ -486,8 +390,9 @@
                            FontFamily="Elephant"
                            HorizontalAlignment="Center" />
                     <md:RatingBar x:Name="swHealthDotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
-                                  Grid.Row="6"
+                                  Grid.Row="7"
                                   Grid.ColumnSpan="2"
                                   HorizontalAlignment="Left"
                                   Padding="20,0,0,0"
@@ -512,7 +417,7 @@
                     <md:RatingBar x:Name="swHealthDotsBottom"
                                   Max="10"
                                   ValueChanged="Dots_ValueChanged"
-                                  Grid.Row="6"
+                                  Grid.Row="7"
                                   Grid.ColumnSpan="2"
                                   HorizontalAlignment="Left"
                                   Padding="20,0,0,0"
@@ -536,7 +441,7 @@
                     </md:RatingBar>
                     <Grid x:Name="swHealthStateGrid"
                           Grid.Column="0"
-                          Grid.Row="7"
+                          Grid.Row="8"
                           Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="20" />
@@ -595,7 +500,7 @@
                     </Grid>
                     <Label x:Name="swWillpowerLabel"
                            Grid.Column="0"
-                           Grid.Row="8"
+                           Grid.Row="9"
                            Grid.ColumnSpan="2"
                            Content="Willpower"
                            FontSize="20"
@@ -603,9 +508,10 @@
                            FontFamily="Elephant"
                            HorizontalAlignment="Center" />
                     <md:RatingBar x:Name="swWillpowerDotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
-                                  Grid.Row="9"
+                                  Grid.Row="10"
                                   Grid.ColumnSpan="2"
                                   HorizontalAlignment="Left"
                                   Padding="20,0,0,0">
@@ -630,7 +536,7 @@
                                   Foreground="#FF707070"
                                   Max="10"
                                   ValueChanged="Dots_ValueChanged"
-                                  Grid.Row="9"
+                                  Grid.Row="10"
                                   Grid.ColumnSpan="2"
                                   HorizontalAlignment="Left"
                                   Padding="20,0,0,0">
@@ -653,7 +559,7 @@
                     </md:RatingBar>
                     <Grid x:Name="swWillpowerValueGrid"
                           Grid.Column="0"
-                          Grid.Row="10"
+                          Grid.Row="11"
                           Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="20" />
@@ -712,7 +618,7 @@
                     </Grid>
                     <Label x:Name="swIntegrityLabel"
                            Grid.Column="0"
-                           Grid.Row="11"
+                           Grid.Row="12"
                            Grid.ColumnSpan="2"
                            Content="Integrity"
                            FontSize="20"
@@ -720,9 +626,10 @@
                            FontFamily="Elephant"
                            HorizontalAlignment="Center" />
                     <md:RatingBar x:Name="swIntegrityDotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
-                                  Grid.Row="12"
+                                  Grid.Row="13"
                                   Grid.ColumnSpan="2"
                                   HorizontalAlignment="Left"
                                   Padding="20,0,0,0">
@@ -747,7 +654,7 @@
                                   Foreground="#FF707070"
                                   Max="10"
                                   ValueChanged="Dots_ValueChanged"
-                                  Grid.Row="12"
+                                  Grid.Row="13"
                                   Grid.ColumnSpan="2"
                                   HorizontalAlignment="Left"
                                   Padding="20,0,0,0">
@@ -769,39 +676,44 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <Label x:Name="swSizeLabel"
-                           FontSize="14"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
                            Content="Size:"
                            Grid.Column="0"
-                           Grid.Row="13"
+                           Grid.Row="14"
                            Padding="0,0,0,0" />
                     <Label x:Name="swSpeedLabel"
-                           FontSize="14"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
                            Content="Speed:"
                            Grid.Column="0"
-                           Grid.Row="14"
+                           Grid.Row="15"
                            Padding="0,0,0,0" />
                     <Label x:Name="swDefenseLabel"
-                           FontSize="14"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
                            Content="Defense:"
                            Grid.Column="0"
-                           Grid.Row="15"
+                           Grid.Row="16"
                            Padding="0,0,0,0" />
                     <Label x:Name="swArmorLabel"
-                           FontSize="14"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
                            Content="Armor:"
                            Grid.Column="0"
-                           Grid.Row="16"
+                           Grid.Row="17"
                            Padding="0,0,0,0" />
                     <Label x:Name="swInitiativeLabel"
-                           FontSize="14"
+                           FontSize="16"
+                           VerticalAlignment="Bottom"
                            Foreground="White"
                            Content="Initiative:"
                            Grid.Column="0"
-                           Grid.Row="17"
+                           Grid.Row="18"
                            Padding="0,0,0,0">
                         <Label.ContextMenu>
                             <ContextMenu>
@@ -812,9 +724,9 @@
                         </Label.ContextMenu>
                     </Label>
                     <mah:NumericUpDown x:Name="swSizeNumUpDown"
-                                       FontSize="14"
+                                       FontSize="16"
                                        Grid.Column="1"
-                                       Grid.Row="13"
+                                       Grid.Row="14"
                                        UpDownButtonsWidth="20"
                                        ParsingNumberStyle="Integer"
                                        Minimum="1"
@@ -827,9 +739,9 @@
                                        TextAlignment="Left"
                                        ValueChanged="NumUpDown_ValueChanged" />
                     <mah:NumericUpDown x:Name="swSpeedNumUpDown"
-                                       FontSize="14"
+                                       FontSize="16"
                                        Grid.Column="1"
-                                       Grid.Row="14"
+                                       Grid.Row="15"
                                        UpDownButtonsWidth="20"
                                        ParsingNumberStyle="Integer"
                                        Minimum="0"
@@ -842,9 +754,9 @@
                                        TextAlignment="Left"
                                        ValueChanged="NumUpDown_ValueChanged" />
                     <mah:NumericUpDown x:Name="swDefenseNumUpDown"
-                                       FontSize="14"
+                                       FontSize="16"
                                        Grid.Column="1"
-                                       Grid.Row="15"
+                                       Grid.Row="16"
                                        UpDownButtonsWidth="20"
                                        ParsingNumberStyle="Integer"
                                        Minimum="-20"
@@ -857,16 +769,16 @@
                                        TextAlignment="Left"
                                        ValueChanged="NumUpDown_ValueChanged" />
                     <TextBox x:Name="swArmorTextBox"
-                             FontSize="14"
+                             FontSize="16"
                              Grid.Column="1"
-                             Grid.Row="16"
+                             Grid.Row="17"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged">
                     </TextBox>
                     <mah:NumericUpDown x:Name="swInitiativeNumUpDown"
-                                       FontSize="14"
+                                       FontSize="16"
                                        Grid.Column="1"
-                                       Grid.Row="17"
+                                       Grid.Row="18"
                                        UpDownButtonsWidth="20"
                                        ParsingNumberStyle="Integer"
                                        Minimum="-20"
@@ -878,39 +790,26 @@
                                        Foreground="White"
                                        TextAlignment="Left"
                                        ValueChanged="NumUpDown_ValueChanged" />
-                    <Label x:Name="swDescriptionLabel"
-                           Grid.Column="0"
-                           Grid.Row="18"
-                           Grid.ColumnSpan="2"
-                           Content="Description"
-                           FontSize="20"
-                           Padding="0,1,0,0"
-                           FontFamily="Elephant"
-                           HorizontalAlignment="Center" />
-                    <TextBox x:Name="swDescriptionTextBox"
-                             Grid.Column="0"
-                             Grid.Row="19"
-                             Grid.ColumnSpan="2"
-                             FontSize="14"
-                             AcceptsReturn="True"
-                             AcceptsTab="True"
-                             TextWrapping="Wrap"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             TextChanged="TextBox_TextChanged">
-                    </TextBox>
                 </Grid>
                 <Rectangle x:Name="swVertLine1"
                            Grid.Column="1"
                            Height="760"
                            Stroke="#FF7F7F7F"
-                           VerticalAlignment="Center"
+                           VerticalAlignment="Bottom"
                            Width="1" />
                 <Rectangle x:Name="swVertLine2"
                            Grid.Column="3"
-                           Height="760"
+                           Grid.RowSpan="2"
+                           Height="996"
                            Stroke="#FF7F7F7F"
                            VerticalAlignment="Center"
                            Width="1" />
+                <Rectangle x:Name="swVertLine4"
+                           Grid.Column="5"
+                           Grid.RowSpan="2"
+                           Height="996"
+                           Stroke="#FF7F7F7F"
+                           Width="1"/>
                 <Grid x:Name="swMiddleGrid"
                       Grid.Column="2"
                       Margin="10">
@@ -942,10 +841,9 @@
                         <RowDefinition Height="28" />
                         <RowDefinition Height="28" />
                         <RowDefinition Height="28" />
-                        <RowDefinition Height="24*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="140" />
                         <ColumnDefinition Width="120" />
                     </Grid.ColumnDefinitions>
                     <Label x:Name="swAttributesLabel"
@@ -958,63 +856,63 @@
                            FontFamily="Elephant"
                            HorizontalAlignment="Center" />
                     <Label x:Name="swIntelligenceLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
-                           Content="Intelligence_______________"
+                           Content="Intelligence________________"
                            Grid.Column="0"
                            Grid.Row="1"
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swWitsLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
-                           Content="Wits_________________________"
+                           Content="Wits___________________________"
                            Grid.Column="0"
                            Grid.Row="2"
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swResolveLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
-                           Content="Resolve_______________"
+                           Content="Resolve_____________________"
                            Grid.Column="0"
                            Grid.Row="3"
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swStrengthLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
-                           Content="Strength_______________"
+                           Content="Strength____________________"
                            Grid.Column="0"
                            Grid.Row="4"
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swDexterityLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
-                           Content="Dexterity_______________"
+                           Content="Dexterity___________________"
                            Grid.Column="0"
                            Grid.Row="5"
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swStaminaLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
-                           Content="Stamina_______________"
+                           Content="Stamina____________________"
                            Grid.Column="0"
                            Grid.Row="6"
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swPresenceLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
-                           Content="Presence_______________"
+                           Content="Presence___________________"
                            Grid.Column="0"
                            Grid.Row="7"
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swManipulationLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
                            Content="Manipulation_______________"
                            Grid.Column="0"
@@ -1022,7 +920,7 @@
                            Padding="0,0,0,0"
                            VerticalAlignment="Bottom" />
                     <Label x:Name="swComposureLabel"
-                           FontSize="16"
+                           FontSize="18"
                            Foreground="White"
                            Content="Composure_______________"
                            Grid.Column="0"
@@ -2120,6 +2018,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill1DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2169,6 +2068,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill2DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2218,6 +2118,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill3DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2267,6 +2168,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill4DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2316,6 +2218,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill5DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2365,6 +2268,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill6DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2414,6 +2318,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill7DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2463,6 +2368,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill8DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2512,6 +2418,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill9DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2561,6 +2468,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill10DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2610,6 +2518,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill11DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2659,6 +2568,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill12DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2708,6 +2618,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill13DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2757,6 +2668,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill14DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2806,6 +2718,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill15DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2855,6 +2768,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swSkill16DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -2906,6 +2820,7 @@
                 </Grid>
                 <Grid x:Name="swRightGrid"
                       Grid.Column="4"
+                      Grid.RowSpan="2"
                       Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120*" />
@@ -2969,61 +2884,61 @@
                     <TextBox x:Name="swMeritTextBox1"
                              Grid.Column="0"
                              Grid.Row="1"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox2"
                              Grid.Column="0"
                              Grid.Row="2"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox3"
                              Grid.Column="0"
                              Grid.Row="3"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox4"
                              Grid.Column="0"
                              Grid.Row="4"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox5"
                              Grid.Column="0"
                              Grid.Row="5"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox6"
                              Grid.Column="0"
                              Grid.Row="6"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox7"
                              Grid.Column="0"
                              Grid.Row="7"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox8"
                              Grid.Column="0"
                              Grid.Row="8"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox9"
                              Grid.Column="0"
                              Grid.Row="9"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0"
                              TextChanged="TextBox_TextChanged" />
                     <TextBox x:Name="swMeritTextBox10"
                              Grid.Column="0"
                              Grid.Row="10"
-                             FontSize="14"
+                             FontSize="16"
                              Padding="0,0,0,0" />
                     <Label x:Name="swConditionsLabel"
                            Grid.Column="0"
@@ -3066,6 +2981,7 @@
                              TextChanged="TextBox_TextChanged">
                     </TextBox>
                     <md:RatingBar x:Name="swMerit1DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3115,6 +3031,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit2DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3164,6 +3081,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit3DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3213,6 +3131,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit4DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3262,6 +3181,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit5DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3311,6 +3231,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit6DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3360,6 +3281,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit7DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3409,6 +3331,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit8DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3458,6 +3381,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit9DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3507,6 +3431,7 @@
                         </md:RatingBar.ValueItemTemplate>
                     </md:RatingBar>
                     <md:RatingBar x:Name="swMerit10DotsTop"
+                                  Visibility="Hidden"
                                   Max="0"
                                   ValueChanged="Dots_ValueChanged"
                                   Grid.Column="1"
@@ -3572,6 +3497,36 @@
                             FontFamily="Elephant"
                             Click="SaveButton_Click" />
                 </Grid>
+                <ScrollViewer x:Name="swAbilitiesScrollViewer"
+                              Grid.Column="6"
+                              Grid.RowSpan="2">
+                    <Grid x:Name="swAbilitiesGrid"
+                          Margin="10"
+                          Height="72"
+                          VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label x:Name="swAbilitiesLabel"
+                               Grid.Row="0"
+                               Grid.ColumnSpan="2"
+                               Content="Abilities"
+                               FontSize="20"
+                               Padding="0,1,0,0"
+                               FontFamily="Elephant"
+                               HorizontalAlignment="Center" />
+                        <Button x:Name="swNewAbilityButton"
+                                Style="{StaticResource MaterialDesignPaperButton}"
+                                Content="{md:PackIcon Kind=PlusBoxOutline}"
+                                Grid.Row="1"
+                                Margin="3"
+                                FontFamily="Elephant"
+                                Width="60"
+                                Click="NewAbilityButton_Click" />
+                    </Grid>
+                </ScrollViewer>
             </Grid>
         </Grid>
     </ScrollViewer>

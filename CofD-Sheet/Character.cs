@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 
@@ -172,6 +175,7 @@ namespace CofD_Sheet
     {
         NPC,
         Mortal,
+        Ephemeral,
         Vampire,
         Mage,
         Werewolf
@@ -208,9 +212,10 @@ namespace CofD_Sheet
                 {
                     "NPC" => 1,
                     "Mortal" => 2,
-                    "Vampire" => 3,
-                    "Mage" => 4,
-                    "Werewolf" => 5,
+                    "Ephemeral" => 3,
+                    "Vampire" => 4,
+                    "Mage" => 5,
+                    "Werewolf" => 6,
                     _ => 0,
                 };
             }
@@ -234,6 +239,21 @@ namespace CofD_Sheet
         {
             if (other == null) return 0;
             return TypeSortValue.CompareTo(other.TypeSortValue);
+        }
+    }
+
+    public class CustomExpander : Expander
+    {
+        public event EventHandler? ActualHeightChanged;
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            if (sizeInfo.HeightChanged)
+            {
+                ActualHeightChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }
