@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -37,7 +38,8 @@ namespace CofD_Sheet
         bool isPanning = false;
         Point lastMousePosition = new();
         //-----------------------------------------------------------------------------------------------------------------//
-
+        Grid grid;
+        RowDefinitionCollection rows;
         #region form-load
         public SheetWindow()
         {
@@ -48,6 +50,8 @@ namespace CofD_Sheet
             ClearForm(); // This triggers a few things necessary for a fresh, clean form. 
             characterToSave = new();
             unsaved = false;
+            grid = swAbilitiesGrid;
+            rows = swAbilitiesGrid.RowDefinitions;
         }
         
         private void InitializeImages()
@@ -893,7 +897,11 @@ namespace CofD_Sheet
             RowDefinition newButtonRow = new() { Height = new GridLength(40) };
             swAbilitiesGrid.RowDefinitions.Insert(row_idx + 1, newButtonRow); // Inject new row.
             Grid.SetRow(button, row_idx + 1); // Move button
+            AssembleTemporaryAbilityControls(row_idx);
+        }
 
+        private void AssembleTemporaryAbilityControls(int row_idx, bool editing = false, string title = "", string desc = "")
+        {
             // Create title box and add to grid.
             TextBox tempTitlebox = new()
             {
@@ -901,6 +909,7 @@ namespace CofD_Sheet
                 VerticalAlignment = VerticalAlignment.Top
             };
             HintAssist.SetHint(tempTitlebox, "Ability Name");
+            if (editing) { tempTitlebox.Text = title; }
             tempTitlebox.SetResourceReference(TextBox.StyleProperty, "MaterialDesignOutlinedTextBox");
             swAbilitiesGrid.Children.Add(tempTitlebox);
             Grid.SetRow(tempTitlebox, row_idx);
@@ -915,6 +924,7 @@ namespace CofD_Sheet
                 Margin = new Thickness(0, 64, 0, 30)
             };
             HintAssist.SetHint(tempDescriptionBox, "Ability Description");
+            if (editing) { tempDescriptionBox.Text = desc; }
             tempDescriptionBox.SetResourceReference(StyleProperty, "MaterialDesignOutlinedTextBox");
             swAbilitiesGrid.Children.Add(tempDescriptionBox);
             Grid.SetRow(tempDescriptionBox, row_idx);
@@ -928,7 +938,7 @@ namespace CofD_Sheet
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Margin = new Thickness(3, 3, 58, 3),
             };
-            tempAcceptButton.Click += AcceptNewAbilityButton_Click;
+            tempAcceptButton.Click += AcceptNewAbilityButton_Click; // Edit has no bearing on this event.
             tempAcceptButton.SetResourceReference(StyleProperty, "MaterialDesignFlatMidBgButton");
             swAbilitiesGrid.Children.Add(tempAcceptButton);
             Grid.SetRow(tempAcceptButton, row_idx);
@@ -941,7 +951,12 @@ namespace CofD_Sheet
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Margin = new Thickness(57, 3, 3, 3)
             };
-            tempCancelButton.Click += CancelNewAbilityButton_Click;
+            if (editing) // Different event based on editing. 
+            {   // Apply old title and desc to be restored on cancel edit.
+                tempCancelButton.Click += (sender, e) =>
+                { CancelEditAbilityButton_Click(sender, e, title, desc); };
+            } 
+            else { tempCancelButton.Click += CancelNewAbilityButton_Click; }
             tempCancelButton.SetResourceReference(StyleProperty, "MaterialDesignPaperButton");
             swAbilitiesGrid.Children.Add(tempCancelButton);
             Grid.SetRow(tempCancelButton, row_idx);
@@ -957,16 +972,22 @@ namespace CofD_Sheet
                 .Where(tb => Grid.GetRow(tb) == row_idx)
                 .ToList();
 
+            AssemblePermanentAbilityControls(textboxes[0].Text, textboxes[1].Text, row_idx);
+            swNewAbilityButton.IsEnabled = true;
+        }
+
+        private void AssemblePermanentAbilityControls(string title, string desc, int row_idx)
+        {
             // Modify grid to accept the expander.
             ClearTempAbilityGridControls(row_idx);
             swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(50);
             swAbilitiesGrid.Height -= 210; // Trim excess space.
 
             // Create expander.
-            CustomExpander tempExpander = new()
+            TrackedExpander tempExpander = new()
             {
                 VerticalAlignment = VerticalAlignment.Top,
-                Header = textboxes[0].Text,
+                Header = title,
                 Foreground = Brushes.White,
                 IsExpanded = false,
                 Margin = new Thickness(0, 2, 0, 2)
@@ -977,6 +998,18 @@ namespace CofD_Sheet
             tempExpander.Collapsed += AbilityExpander_ExpandedOrCollapsed;
             tempExpander.ActualHeightChanged += Expander_HeightChanged;
 
+            // Create context menu for expander. 
+            ContextMenu tempContextMenu = new();
+            MenuItem menuEdit = new() { Header = "Edit" };
+            menuEdit.Click += ExpanderEdit_OnClick;
+            menuEdit.CommandParameter = tempExpander;
+            MenuItem menuDelete = new() { Header = "Delete" };
+            menuDelete.Click += (sender, e) => ExpanderDelete_OnClick(sender, e); // workaround to mismatched delegate
+            menuDelete.CommandParameter = tempExpander;
+            tempContextMenu.Items.Add(menuEdit);
+            tempContextMenu.Items.Add(menuDelete);
+            tempExpander.ContextMenu = tempContextMenu;
+
             // Create stackpanel child of expander.
             StackPanel tempStackPanel = new()
             {
@@ -986,33 +1019,13 @@ namespace CofD_Sheet
             tempStackPanel.SetResourceReference(ForegroundProperty, "MaterialDesignBody");
 
             // Create textblock child of stackpanel.
-            TextBlock tempTextBlock = new() { Text = textboxes[1].Text, };
+            TextBlock tempTextBlock = new() { Text = desc };
             tempTextBlock.SetResourceReference(StyleProperty, "HorizontalExpanderContentTextBlock");
 
             // Assemble creation.
             tempStackPanel.Children.Add(tempTextBlock);
             tempExpander.Content = tempStackPanel;
             swAbilitiesGrid.Children.Add(tempExpander);
-
-            swNewAbilityButton.IsEnabled = true;
-        }
-
-        private void Expander_HeightChanged(object sender, EventArgs e)
-        {
-            CustomExpander exp = (CustomExpander)sender;
-            if(exp.IsExpanded)
-            {
-                int row_idx = Grid.GetRow(exp);
-                double height = exp.ActualHeight;
-                if (height > 50)
-                {
-                    int desiredRowHeight = (int)Math.Ceiling(height) + 4;
-                    int targetGridHeight = (int)(swAbilitiesGrid.Height - (1000 - desiredRowHeight));
-                    if (targetGridHeight < 160) { return; } // Shitty patchfix LOL
-                    swAbilitiesGrid.Height = targetGridHeight;
-                    swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(desiredRowHeight);
-                }
-            }
         }
 
         private void CancelNewAbilityButton_Click(object sender, RoutedEventArgs e)
@@ -1024,7 +1037,14 @@ namespace CofD_Sheet
             swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(50);
             swAbilitiesGrid.Height -= 220;
             Grid.SetRow(swNewAbilityButton, row_idx); // Return button to its old spot.
+            swAbilitiesGrid.RowDefinitions.RemoveAt(row_idx + 1); // Delete row allocated for button.
             swNewAbilityButton.IsEnabled = true;
+        }
+
+        private void CancelEditAbilityButton_Click(object sender, RoutedEventArgs e, string oldTitle, string oldDesc)
+        {
+            int row_idx = Grid.GetRow((Button)sender);
+            AssemblePermanentAbilityControls(oldTitle, oldDesc, row_idx);
         }
 
         private void ClearTempAbilityGridControls(int row_idx)
@@ -1035,30 +1055,122 @@ namespace CofD_Sheet
             .ToList();
 
             foreach (var control in controlsToDelete)
-            { swAbilitiesGrid.Children.Remove(control); }
+            {
+#nullable disable
+                if (control is Button button)
+                { // Unsubscribe from events. 
+                    PackIcon pi = button.Content as PackIcon;
+                    if (pi.Kind == PackIconKind.Check) { button.Click -= AcceptNewAbilityButton_Click; }
+                    else { button.Click -= CancelNewAbilityButton_Click; }
+                }
+                swAbilitiesGrid.Children.Remove(control);
+#nullable enable
+            }
+        }
+
+        private void ExpanderEdit_OnClick(object sender, RoutedEventArgs e)
+        {
+#nullable disable
+            MenuItem mi = (MenuItem)sender;
+            TrackedExpander exp = mi.CommandParameter as TrackedExpander;
+            exp.IsExpanded = false;
+            int row_idx = Grid.GetRow(exp);
+
+            swAbilitiesGrid.Height += 210; // Only increase large enough to fit editor (260px needed, have: 50px).  
+            swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(260); // Change row height to make room for editor. 
+
+            StackPanel stack = exp.Content as StackPanel;
+            TextBlock block = stack.Children.OfType<TextBlock>().FirstOrDefault();
+#nullable enable
+            string title = (string)exp.Header;
+            string desc = string.Empty;
+            if (block is not null) { desc = block.Text; }
+            ExpanderDelete_OnClick(sender, e, editing: true); // Run code to delete the expander. It will be reassembled later.
+            AssembleTemporaryAbilityControls(row_idx, editing: true, title, desc);
+        }
+
+        private void ExpanderDelete_OnClick(object sender, RoutedEventArgs e, bool editing = false)
+        {
+            MenuItem mi = (MenuItem)sender;
+#nullable disable
+            TrackedExpander exp = mi.CommandParameter as TrackedExpander;
+            int row_idx = Grid.GetRow(exp);
+            MenuItem menuEdit = exp.ContextMenu.Items[0] as MenuItem;
+            MenuItem menuDelete = exp.ContextMenu.Items[1] as MenuItem;
+            // Unsubscribe from events.
+            menuEdit.Click -= ExpanderEdit_OnClick;
+            menuDelete.Click -= (sender, e) => ExpanderDelete_OnClick(sender, e);
+            exp.ContextMenu = null;
+            swAbilitiesGrid.Children.Remove(exp);
+            if (!editing) // Don't delete row if editing. 
+            {
+                swAbilitiesGrid.RowDefinitions.RemoveAt(row_idx);
+                // Shift remaining controls up one row. 
+                for (int i = row_idx; i < swAbilitiesGrid.RowDefinitions.Count; i++)
+                {
+                    UIElement child = swAbilitiesGrid.Children.Cast<UIElement>()
+                                            .FirstOrDefault(e => Grid.GetRow(e) == i);
+                    if (child is not null) { Grid.SetRow(child, i - 1); }
+                }
+            }
+#nullable enable
+        }
+
+        /*
+         * These two events manage some important shit but they're a bit convoluted in how they work. This documentation explains. 
+         * 
+         * The problem: Dynamically added expanders are placed in grid rows, the grid rows need to adjust their height to allow
+         * the expander to expand fully. However, it's not possible to know how big the expander is going to be upon firing the Expanded
+         * event, nor is it possible to measure the expander or its text block when expanded in a grid row too small for it. 
+         * The solution: create a custom expander control that tracks the ActualHeight value and fires an event when that value changes. 
+         * On expand, extend the grid row to an arbitrarily large value (1000px) and force the grid to render its children,
+         * when the expander renders properly, the ActualHeight value goes up to accompodate, firing the HeightChanged event. 
+         * In this second event, the height is measured and the grid is readjusted to the correct height. 
+         * When the expander is collapsed, reset the grid row height to 50px. 
+         * There's some guards in place due to the HeightChanged event firing several times unintentionally, it'll fire multiple times as
+         * the expander is first created (at ~half height and again at 50px), and it will fire 2+ times when adjusting the grid properly,
+         * to prevent the grid from being shrunk too much, it checks to see if the grid will become smaller than its smallest possible value,
+         * if so, the event is firing too much and it returns from subsequent runs. 
+         */
+
+        private void Expander_HeightChanged(object? sender, EventArgs e)
+        {
+            if(sender is null) { return; }
+            TrackedExpander exp = (TrackedExpander)sender;
+            if (exp.IsExpanded)
+            {
+                int row_idx = Grid.GetRow(exp);
+                double height = exp.ActualHeight;
+                if (height > 50)
+                {
+                    int desiredRowHeight = (int)Math.Ceiling(height) + 4; // Add some extra padding on the bottom, the textblock needs it.
+                    int targetGridHeight = (int)(swAbilitiesGrid.Height - (1000 - desiredRowHeight));
+                    if (targetGridHeight < 160) { return; } // Shitty patchfix LOL
+                    swAbilitiesGrid.Height = targetGridHeight;
+                    swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(desiredRowHeight);
+                }
+            }
         }
 
         private void AbilityExpander_ExpandedOrCollapsed(object sender, RoutedEventArgs e)
-        { ExpanderAdjustGridSize((CustomExpander)sender); }
-
-        private void ExpanderAdjustGridSize(CustomExpander culprit)
-        {
+        { 
+            TrackedExpander culprit = (TrackedExpander)sender;
             int row_idx = Grid.GetRow(culprit);
             if (culprit.IsExpanded)
             {
-                double height = culprit.ActualHeight;
                 swAbilitiesGrid.Height += 950;
                 swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(1000);
                 swAbilitiesGrid.UpdateLayout();
-            } else
+            }
+            else
             {
-                double targetHeight = swAbilitiesGrid.Height - (culprit.ActualHeight - 50);
+                double targetHeight = swAbilitiesGrid.Height - 
+                    (swAbilitiesGrid.RowDefinitions[row_idx].Height.Value - 50);
                 if (targetHeight < 1) { return; }
                 swAbilitiesGrid.Height = targetHeight;
                 swAbilitiesGrid.RowDefinitions[row_idx].Height = new GridLength(50);
             }
         }
-
         #endregion
 
         #region context-menu
@@ -1075,7 +1187,7 @@ namespace CofD_Sheet
             portraitPath = "none";
         }
 
-        private void Delete_OnClick(object sender, RoutedEventArgs e)
+        private void CharactersDataGridDelete_OnClick(object sender, RoutedEventArgs e)
         {
             int idx = swCharactersDataGrid.SelectedIndex;
             if (idx == -1) { return; }

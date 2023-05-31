@@ -242,7 +242,8 @@ namespace CofD_Sheet
         }
     }
 
-    public class CustomExpander : Expander
+    // A custom version of the Expander control that fires an event when the ActualHeight property is changed.
+    public class TrackedExpander : Expander
     {
         public event EventHandler? ActualHeightChanged;
 

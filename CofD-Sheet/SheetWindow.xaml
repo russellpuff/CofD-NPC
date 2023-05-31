@@ -129,7 +129,7 @@
                     <DataGrid.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Delete"
-                                      Click="Delete_OnClick"
+                                      Click="CharactersDataGridDelete_OnClick"
                                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}" />
                         </ContextMenu>
                     </DataGrid.ContextMenu>
@@ -212,6 +212,7 @@
                     <ColumnDefinition Width="260" />
                     <ColumnDefinition Width="4" />
                     <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="4" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -810,6 +811,12 @@
                            Height="996"
                            Stroke="#FF7F7F7F"
                            Width="1"/>
+                <Rectangle x:Name="swVertLine5"
+                           Grid.Column="7"
+                           Grid.RowSpan="2"
+                           Height="996"
+                           Stroke="#FF7F7F7F"
+                           Width="1" />
                 <Grid x:Name="swMiddleGrid"
                       Grid.Column="2"
                       Margin="10">
@@ -3499,15 +3506,16 @@
                 </Grid>
                 <ScrollViewer x:Name="swAbilitiesScrollViewer"
                               Grid.Column="6"
-                              Grid.RowSpan="2">
+                              Grid.RowSpan="2"
+                              Margin="10">
                     <Grid x:Name="swAbilitiesGrid"
-                          Margin="10"
                           Height="72"
-                          VerticalAlignment="Top">
+                          VerticalAlignment="Top"
+                          ShowGridLines="True">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="32" />
                             <RowDefinition Height="40" />
-                            <RowDefinition Height="*" />
+                            
                         </Grid.RowDefinitions>
                         <Label x:Name="swAbilitiesLabel"
                                Grid.Row="0"
